@@ -1,0 +1,33 @@
+CREATE TABLE Warehouse (
+IdWarehouse serial PRIMARY KEY
+);
+
+CREATE TABLE Shipment (
+IdShipment serial PRIMARY KEY,
+IdWarehouse INTEGER,
+IdStore INTEGER,
+RequestDate VARCHAR(50) NOT NULL,
+DeliveryDate DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE Item (
+IdItem serial PRIMARY KEY,
+Code VARCHAR(50) NOT NULL,
+Brand VARCHAR(50) NOT NULL,
+Description VARCHAR(50) NOT NULL,
+Category VARCHAR(50) NOT NULL,
+Price INTEGER NOT NULL,
+Status ????????
+Tiempo de Garantia ????????
+EntryDate DATE NOT NULL,
+);
+
+CREATE TABLE Store (
+IdStore serial PRIMARY KEY,
+Code VARCHAR(50) NOT NULL,
+Adress ???????????
+Status ???????????
+IdAdmin INTEGER,
+IdWarehoouse INTEGER
+);
+ 
