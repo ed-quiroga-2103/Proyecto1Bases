@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS ItemReceipt (
 CREATE TABLE IF NOT EXISTS Person (
 
     IdPerson PRIMARY KEY INT UNIQUE NOT NULL,
-    Name TEXT NOT NULL,
+    FirstName TEXT NOT NULL,
     MiddleName TEXT NOT NULL,
     LastName TEXT NOT NULL,
     IdentityDoc TEXT NOT NULL,
@@ -103,6 +103,47 @@ CREATE TABLE IF NOT EXISTS Job (
 
     IdJob PRIMARY KEY INT UNIQUE NOT NULL,
     Job TEXT NOT NULL,
-    Salary INT
+    Salary INT NOT NULL
+
+);
+
+CREATE TABLE IF NOT EXISTS EmployeeJob (
+
+    IdJob INT NOT NULL,
+    IdPerson INT NOT NULL,
+    HireDate DATE,
+
+    FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
+    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+
+);
+
+CREATE TABLE IF NOT EXISTS Shipment (
+
+    IdShipment PRIMARY KEY INT UNIQUE NOT NULL,
+    IdWarehouse INT NOT NULL,
+    RequestDate DATE NOT NULL,
+    DeliveryDate DATE NOT NULL
+
+);
+
+CREATE TABLE IF NOT EXISTS ItemShipment (
+
+    IdShipment INT NOT NULL,
+    IdItem INT NOT NULL,
+
+    FOREIGN KEY (IdShipment) REFERENCES Shipment (IdShipment),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+);
+
+CREATE TABLE IF NOT EXISTS Promo (
+
+    IdPromo PRIMARY KEY INT UNIQUE NOT NULL,
+    IdItem INT NOT NULL,
+    InitialDateTime DATETIME NOT NULL,
+    FinalDateTime DATETIME NOT NULL,
+    Percentage INT NOT NULL,
+
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 
 );
