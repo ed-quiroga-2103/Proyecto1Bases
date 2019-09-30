@@ -34,11 +34,41 @@ def generateStateScript():
     file.write(query)
 
     file.close()
+    
+def generateCityScript():
+    file = open("Python/Queries/CityQuery.sql","w+")
 
-def generatePersonaScript():
-    file = open("PersonaScript.sql", "w+")
+    lines = linesToList("Python/DataPools/Cities.txt")
+
+    num = int(len(lines)/50)
+
+    cont = 0
+    stateId = 1
+    cityId = 1
+    
+    query = ""
+
+    file.write("INSERT INTO City VALUES\n")
+
+    while(stateId != 51):
+        
+        while(cont != num):
+            
+            query += str((cityId,stateId,lines[cityId-1])) + ",\n"
+
+            cityId += 1
+            cont += 1
+
+        cont = 0
+        stateId += 1
+
+    file.write(query)
+
+    file.close()
+
+
     
 
-generateStateScript()
-        
+#generateStateScript()
+generateCityScript()     
     
