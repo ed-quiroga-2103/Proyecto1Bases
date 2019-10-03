@@ -140,6 +140,16 @@
 --     Salary INTEGER NOT NULL
 -- );
 
+-- INSERT INTO Job (IdJob,Job,Salary)
+-- VALUES (1,'Cantante',12000),
+-- (2,'Programador',17000),
+-- (3,'Actor',20000),
+-- (4,'Futbolista',4000),
+-- (5,'Arquitecto',28000),
+-- (6,'Mago',5000),
+-- (7,'Conserge',3800),
+-- (8,'Fotografo',37920);
+
 -- CREATE TABLE Address (
 --     IdAddress INTEGER PRIMARY KEY,
 --     IdCity INTEGER NOT NULL,
@@ -166,4 +176,54 @@
 --     Name VARCHAR NOT NULL
 -- );
 
--- SELECT * FROM Item;
+-- INSERT INTO Country (IdCountry,Name)
+-- VALUES (2,'U.S.A'),
+-- (3,'Francia'),
+-- (4,'Mexico'),
+-- (5,'Colombia'),
+-- (6,'Argentina'),
+-- (7,'Uruguay'),
+-- (8,'Panama'),
+-- (9,'Puerto Rico');
+
+
+--PRUEBAS CON POSTGRESQL
+
+-- SELECT * FROM Country;
+--CREACION DE FUNCION
+-- CREATE FUNCTION suma10(entero INT) RETURNS INT AS $$
+-- BEGIN
+-- RETURN entero + 10;
+-- END; $$
+-- LANGUAGE PLPGSQL;
+
+-- SELECT suma10(8);
+
+--FUNCION QUE RETORNA UNA TABLA
+-- CREATE OR REPLACE FUNCTION get_job (p_pattern VARCHAR) 
+--    RETURNS TABLE (
+--       film_title VARCHAR,
+--       film_release_year INT
+-- ) 
+-- AS $$
+-- BEGIN
+--    RETURN QUERY SELECT
+--       job,
+--       cast( salary as integer)
+--    FROM
+--       Job
+--    WHERE
+--       Job ILIKE p_pattern ;
+-- END; $$ 
+ 
+-- LANGUAGE 'plpgsql';
+
+-- SELECT get_job('Actor%');
+
+--ALTERAR UNA TABLA
+-- UPDATE Job
+-- SET Salary = 8888
+-- WHERE
+--     Job = 'Actor';
+
+SELECT * FROM Job;
