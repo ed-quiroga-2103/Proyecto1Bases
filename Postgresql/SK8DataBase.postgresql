@@ -226,4 +226,4 @@
 -- WHERE
 --     Job = 'Actor';
 
-SELECT * FROM Job;
+-- SELECT * FROM Job;
