@@ -162,7 +162,7 @@ def generateEmployeeScript(num, IdList, IdStore):
     for i in range(num):
         queries += str(generateEmployee(IdList[i])) + ", \n"
     
-    file = open("Queries/Employee"+str(IdStore)+".sql")
+    file = open("Queries/Employee"+str(IdStore)+".sql", "w+")
     file.write(queries)
     file.close()
 
@@ -176,7 +176,7 @@ def generateJobEmployeeScript(IdList, IdAdmin, IdStore):
     today = date.today()
     hireDate = today.strftime("%Y-%m-%d")
 
-    queries = "INSERT INTO JobEmployee VALUES\n"+ str((1,IdAdmin,hireDate)) + ",\n"
+    queries = "INSERT INTO JobEmployee VALUES\n"+ str((1, IdAdmin, IdStore, hireDate)) + ",\n"
 
     IdList.remove(IdAdmin)
 
@@ -195,28 +195,31 @@ def generateJobEmployeeScript(IdList, IdAdmin, IdStore):
 
 
 
-def generateStore(IdStore):
+def generateStore(IdStore, excluded):
     #2000 IdPersona
     #1050 addresses
 
     #Store Data
     #HAY QUE CONSIDERAR QUE LOS ID DE LOS EMPLEADOS NO SE REPITAN ENTRE TIENDAS
     #Se puede utilizar una lista de exclusion de ids
-    idList = generateIdList(10,2000, [])
+    idList = generateIdList(10,2000, excluded)
     code = IdStore
     IdAddress = random.choice(range(1050))+1
     status = 1
     IdAdmin = random.choice(idList)
 
     
-    query = () #PENDING
+    query = (IdStore, code, IdAddress, status, IdAdmin) 
     #Employee Generation
     generateEmployeeScript(10,idList,IdStore)
 
     #JobEmployee Generation
     generateJobEmployeeScript(idList, IdAdmin, IdStore)
 
-    file.open("Store"+str(IdStore)+"Query.sql", "w+")
-    file.write
+    file = open("Queries/Store"+str(IdStore)+"Query.sql", "w+")
+    file.write("INSERT INTO Store VALUES \n" + str(query) + ";")
+    file.close()
 
-
+    file = open("ExcludedIds.txt", "a+")
+    file.write(str(idList)+"\n")
+    file.close()
