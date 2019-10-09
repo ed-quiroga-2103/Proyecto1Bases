@@ -1,4 +1,5 @@
 import random
+from datetime import date
 
 def linesToList(path):
     file = open(path,"r")
@@ -38,7 +39,7 @@ def generateStateScript():
     file.close()
     
 def generateCityScript():
-    file = open("Python/Queries/CityQuery.sql","w+")
+    file = open("Queries/CityQuery.sql","w+")
 
     lines = linesToList("Python/DataPools/Cities.txt")
 
@@ -86,7 +87,7 @@ def generateAddressScript():
 
         cont = 0
 
-    file = open("Python/Queries/AddressQuery.sql", "w+")
+    file = open("Queries/AddressQuery.sql", "w+")
     file.write(queries)
     file.close()
     
@@ -131,11 +132,11 @@ def generatePersonaScript():
         queries += generatePersona(i+1, IdAddress) + ",\n"
 
 
-    file = open("Python/Queries/PersonaQuery.sql", "w+")
+    file = open("Queries/PersonaQuery.sql", "w+")
     file.write(queries)
     file.close()
 
-def generateIdList(num, max):
+def generateIdList(num, max, excluded):
 
     idList = []
 
@@ -143,32 +144,82 @@ def generateIdList(num, max):
         
         id = random.choice(range(max))+1
 
-        while id in idList:
+        while id in idList and id in excluded:
             id = random.choice(range(max))+1
 
         idList.append(id)
     
     return idList
 
-def generateEmployee(IdPerson,IdStore):
+def generateEmployee(IdPerson):
 
     return (IdPerson, 1)
 
-def generateStore(IdStore):
+def generateEmployeeScript(num, IdList, IdStore):
+
+    queries = ""
+
+    for i in range(num):
+        queries += str(generateEmployee(IdList[i])) + ", \n"
+    
+    file = open("Queries/Employee"+str(IdStore)+".sql", "w+")
+    file.write(queries)
+    file.close()
+
+
+def generateJobEmployee(IdPerson, IdStore, hireDate, IdJob = -1):
+    if IdJob == -1:
+        IdJob = random.choice(range(2,5))
+    return (IdJob+1, IdPerson, IdStore, hireDate)
+
+def generateJobEmployeeScript(IdList, IdAdmin, IdStore):
+    today = date.today()
+    hireDate = today.strftime("%Y-%m-%d")
+
+    queries = "INSERT INTO JobEmployee VALUES\n"+ str((1, IdAdmin, IdStore, hireDate)) + ",\n"
+
+    IdList.remove(IdAdmin)
+
+    for i in range(len(IdList)):
+        idEmployee = IdList[i]
+
+        query = generateJobEmployee(idEmployee, IdStore, hireDate)
+
+        queries += str(query) + ",\n"
+    
+    file = open("Queries/JobEmployees"+str(IdStore)+".sql", "w+")
+    file.write(queries)
+    file.close()
+
+    return
+
+
+
+def generateStore(IdStore, excluded):
     #2000 IdPersona
     #1050 addresses
 
     #Store Data
-    
-    idList = generateIdList(10,2000)
+    #HAY QUE CONSIDERAR QUE LOS ID DE LOS EMPLEADOS NO SE REPITAN ENTRE TIENDAS
+    #Se puede utilizar una lista de exclusion de ids
+    idList = generateIdList(10,2000, excluded)
     code = IdStore
     IdAddress = random.choice(range(1050))+1
     status = 1
     IdAdmin = random.choice(idList)
 
     
+    query = (IdStore, code, IdAddress, status, IdAdmin) 
+    #Employee Generation
+    generateEmployeeScript(10,idList,IdStore)
 
+    #JobEmployee Generation
+    generateJobEmployeeScript(idList, IdAdmin, IdStore)
 
+    file = open("Queries/Store"+str(IdStore)+"Query.sql", "w+")
+    file.write("INSERT INTO Store VALUES \n" + str(query) + ";")
+    file.close()
 
-    pass
-
+    file = open("ExcludedIds.txt", "a+")
+    file.write(str(idList)+"\n")
+    file.close()
