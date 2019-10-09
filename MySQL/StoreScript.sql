@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS Person (
 
     IdPerson PRIMARY KEY INT UNIQUE NOT NULL,
     FirstName TEXT NOT NULL,
-    MiddleName TEXT NOT NULL,
+    MiddleName TEXT,
     LastName TEXT NOT NULL,
     IdentityDoc TEXT NOT NULL,
     IdAddress INT NOT NULL,
