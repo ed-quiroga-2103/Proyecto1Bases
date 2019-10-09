@@ -134,3 +134,27 @@ def generatePersonaScript():
     file = open("Python/Queries/PersonaQuery.sql", "w+")
     file.write(queries)
     file.close()
+
+def generateIdList(num, max):
+
+    idList = []
+
+    for i in range(num):
+        
+        id = random.choice(range(max))+1
+
+        while id in idList:
+            id = random.choice(range(max))+1
+
+        idList.append(id)
+    
+    return idList
+
+def generateEmployee(IdPerson,IdStore):
+
+    return (IdPerson, 1)
+
+def generateStore():
+    #Pending
+    pass
+
