@@ -256,7 +256,8 @@ def generateBrands():
 
 def generateItem(IdItem, IdBrand):
 
-    categories = ["Shirt", "Pants", "Shoes", "Skateboard", "Trucks", "Wheels", "Bearings", "Board", "Hat"]
+    categories = [1,2,3,4,5,6,7,8,9]
+    categoryDescription = ["Shirt", "Pants", "Shoes", "Skateboard", "Trucks", "Wheels", "Bearings", "Board", "Hat"]
     prices = [25,40,80,120,40,45,25,60,25]
     descriptions = ["Nice ", "Cool ", "Amazing ", "The best ", "Fire "]
 
@@ -264,7 +265,7 @@ def generateItem(IdItem, IdBrand):
 
     category = categories[ind]
     price = prices[ind]
-    description = descriptions[ind%5] + category
+    description = descriptions[ind%5] + categoryDescription[ind]
 
     today = date.today()
     entryDate = today.strftime("%Y-%m-%d")
@@ -277,14 +278,12 @@ def generateItems():
 
     queries = "INSERT INTO Items VALUES\n"
 
-    contItem = 0
-    contBrand = 0
+    contItem = 1
+    contBrand = 1
 
     contLim = 0
 
     while contBrand != 26:
-        contItem += 1
-        contBrand += 1
 
         while contLim != 10:
 
@@ -298,6 +297,15 @@ def generateItems():
         contLim = 0
         contBrand += 1
 
-    file = open("Queries/ItemQuery.sql", "w+")
+
+    file = open("Queries/ItemQuery3.sql", "w+")
     file.write(queries)
     file.close()
+
+def generateCustomer():
+    queries = "INSERT INTO Customer"
+    for i in range(2000):
+        query = (i+1, 1, 0)
+        queries += str(query) + ",\n"
+
+    file = open("Queries/CustomerQuery.sql")
