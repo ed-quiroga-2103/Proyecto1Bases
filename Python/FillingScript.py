@@ -154,7 +154,21 @@ def generateEmployee(IdPerson,IdStore):
 
     return (IdPerson, 1)
 
-def generateStore():
-    #Pending
+def generateStore(IdStore):
+    #2000 IdPersona
+    #1050 addresses
+
+    #Store Data
+    
+    idList = generateIdList(10,2000)
+    code = IdStore
+    IdAddress = random.choice(range(1050))+1
+    status = 1
+    IdAdmin = random.choice(idList)
+
+    
+
+
+
     pass
 
