@@ -58,22 +58,30 @@ CREATE TABLE IF NOT EXISTS Category (
 
 );
 
+CREATE TABLE IF NOT EXISTS Brand(
+
+    IdBrand INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Name VARCHAR(20) NOT NULL
+
+);
+
 CREATE TABLE IF NOT EXISTS Item (
     
     IdItem INTEGER PRIMARY KEY UNIQUE NOT NULL,
     Code VARCHAR(20) NOT NULL,
-    Brand VARCHAR(20) NOT NULL,
+    IdBrand INT NOT NULL,
     Descript VARCHAR(20) NOT NULL,
     IdCategory INTEGER NOT NULL,
     Price INTEGER NOT NULL,
     Status INTEGER NOT NULL,
     EntryDate DATE NOT NULL,
 
-    FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory)
+    FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory),
+    FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand)
 
 );
 
-DROP TABLE `Test1`.`Receipt`
+USE Test1;
 
 CREATE TABLE IF NOT EXISTS Receipt (
 
