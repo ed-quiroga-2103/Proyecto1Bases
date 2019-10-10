@@ -1,2 +1,0 @@
-INSERT INTO Store VALUES 
-(1, 1, 229, 1, 126);
