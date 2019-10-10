@@ -1,3 +1,6 @@
+INSERT INTO Country VALUES
+(1, 'USA');
+
 INSERT INTO State VALUES
 (1, 1, 'Alabama'),
 (1, 2, 'Alaska'),
