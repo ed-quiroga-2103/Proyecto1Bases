@@ -223,3 +223,81 @@ def generateStore(IdStore, excluded):
     file = open("ExcludedIds.txt", "a+")
     file.write(str(idList)+"\n")
     file.close()
+
+def getRandElements(elements, num):
+
+    randElements = []
+
+    for i in range(num):
+        ele = random.choice(elements)
+
+        while ele in randElements:
+            ele = random.choice(elements)
+
+        randElements.append(ele)
+
+    return randElements
+
+def generateBrands():
+    
+    brands = linesToList("Python/DataPools/Brands.txt")
+
+    randBrands = getRandElements(brands, 25)
+
+    queries = "INSERT INTO Brand VALUES"
+
+    for i in range(25):
+
+        queries += str( (i+1, randBrands[i]) ) + ",\n"
+
+    file = open("Queries/BrandQuery.sql", "w+")
+    file.write(queries)
+    file.close()
+
+def generateItem(IdItem, IdBrand):
+
+    categories = ["Shirt", "Pants", "Shoes", "Skateboard", "Trucks", "Wheels", "Bearings", "Board", "Hat"]
+    prices = [25,40,80,120,40,45,25,60,25]
+    descriptions = ["Nice ", "Cool ", "Amazing ", "The best ", "Fire "]
+
+    ind = random.choice(range(9))
+
+    category = categories[ind]
+    price = prices[ind]
+    description = descriptions[ind%5] + category
+
+    today = date.today()
+    entryDate = today.strftime("%Y-%m-%d")
+
+    status = 1
+
+    return (IdItem, IdItem, IdBrand, description, category, price, status, entryDate)
+
+def generateItems():
+
+    queries = "INSERT INTO Items VALUES\n"
+
+    contItem = 0
+    contBrand = 0
+
+    contLim = 0
+
+    while contBrand != 26:
+        contItem += 1
+        contBrand += 1
+
+        while contLim != 10:
+
+            query = str(generateItem(contItem, contBrand))
+
+            queries += query + ",\n"
+
+            contItem += 1
+            contLim += 1
+
+        contLim = 0
+        contBrand += 1
+
+    file = open("Queries/ItemQuery.sql", "w+")
+    file.write(queries)
+    file.close()
