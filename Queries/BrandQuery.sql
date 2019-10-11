@@ -1,4 +1,7 @@
-INSERT INTO Brand VALUES(1, 'Ricta'),
+USE Test1;
+
+INSERT INTO Brand VALUES
+(1, 'Ricta'),
 (2, 'C1rca'),
 (3, 'Polar Skate Co'),
 (4, 'Brixton'),

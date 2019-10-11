@@ -1,7 +1,9 @@
+USE Test1;
+
 INSERT INTO Country VALUES
 (1, 'USA');
 
-INSERT INTO State VALUES
+INSERT INTO State (IdCountry, IdState, Name) VALUES
 (1, 1, 'Alabama'),
 (1, 2, 'Alaska'),
 (1, 3, 'Arizona'),

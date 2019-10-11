@@ -1,15 +1,17 @@
+USE Test1;
+
 CREATE TABLE IF NOT EXISTS Country (
 
-    IdCountry PRIMARY KEY INT UNIQUE NOT NULL,
-    Name TEXT NOT NULL
+    IdCountry INTEGER PRIMARY KEY NOT NULL,
+    Name VARCHAR(20) NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS State (
-
-    IdState PRIMARY KEY INT UNIQUE NOT NULL,
-    IdCountry INT NOT NULL,
-    Name TEXT NOT NULL,
+    
+    IdCountry INTEGER NOT NULL,
+    IdState INTEGER PRIMARY KEY NOT NULL,
+    Name VARCHAR(20) NOT NULL,
 
     FOREIGN KEY (IdCountry) REFERENCES Country (IdCountry) 
 
@@ -17,9 +19,9 @@ CREATE TABLE IF NOT EXISTS State (
 
 CREATE TABLE IF NOT EXISTS City (
 
-    IdCity PRIMARY KEY INT UNIQUE NOT NULL,
-    IdState INT NOT NULL,
-    Name TEXT NOT NULL,
+    IdCity INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    IdState INTEGER NOT NULL,
+    Name VARCHAR(20)NOT NULL,
 
     FOREIGN KEY (IdState) REFERENCES State (IdState)
 
@@ -27,63 +29,88 @@ CREATE TABLE IF NOT EXISTS City (
 
 CREATE TABLE IF NOT EXISTS Address (
 
-    IdAddress PRIMARY KEY INT UNIQUE NOT NULL,
-    IdCity INT NOT NULL,
-    Detail TEXT NOT NULL,
+    IdAddress INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    IdCity INTEGER NOT NULL,
+    Detail VARCHAR(20)NOT NULL,
 
     FOREIGN KEY (IdCity) REFERENCES City (IdCity)
 
 );
 
-CREATE TABLE IF NOT EXISTS Item (
-    
-    IdItem PRIMARY KEY INT UNIQUE NOT NULL,
-    Code TEXT NOT NULL,
-    Brand TEXT NOT NULL,
-    Descript TEXT NOT NULL,
-    Category TEXT NOT NULL,
-    Price INT NOT NULL,
-    Status INT NOT NULL,
-    EntryDate DATE NOT NULL
+
+CREATE TABLE IF NOT EXISTS Person (
+
+    IdPerson INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    FirstName VARCHAR(20)NOT NULL,
+    MiddleName TEXT,
+    LastName VARCHAR(20)NOT NULL,
+    IdentityDoc VARCHAR(20)NOT NULL,
+    IdAddress INTEGER NOT NULL,
+
+    CONSTRAINT addressKey FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress)
 
 );
 
+CREATE TABLE IF NOT EXISTS Category (
+
+    IdCategory INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Name VARCHAR(20)
+
+);
+
+CREATE TABLE IF NOT EXISTS Brand(
+
+    IdBrand INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Name VARCHAR(20) NOT NULL
+
+);
+
+CREATE TABLE IF NOT EXISTS Item (
+    
+    IdItem INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Code VARCHAR(20) NOT NULL,
+    IdBrand INT NOT NULL,
+    Descript VARCHAR(20) NOT NULL,
+    IdCategory INTEGER NOT NULL,
+    Price INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
+    EntryDate DATE NOT NULL,
+
+    FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory),
+    FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand)
+
+);
+
+USE Test1;
+
 CREATE TABLE IF NOT EXISTS Receipt (
 
-    IdReceipt PRIMARY KEY INT UNIQUE NOT NULL,
-    IdEmployee INT NOT NULL,
-    Price INT NOT NULL,
-    SellingDate DATE NOT NULL
+    IdReceipt INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
+    IdEmployee INTEGER NOT NULL,
+    IdCustomer INTEGER,
+    Price INTEGER NOT NULL,
+    SellingDate DATE NOT NULL,
+
+    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
+    FOREIGN KEY (IdCustomer) REFERENCES Person (IdPerson)
 
 );
 
 CREATE TABLE IF NOT EXISTS ItemReceipt (
 
-    IdItem INT NOT NULL,
-    IdReceipt INT NOT NULL,
-    Quantity INT NOT NULL,
+    IdItem INTEGER NOT NULL,
+    IdReceipt INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
 
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem),
-    FOREIGN KEY (IdReceipt) REFERENCES Item (IdReceipt)
+    FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt)
 );
 
-CREATE TABLE IF NOT EXISTS Person (
-
-    IdPerson PRIMARY KEY INT UNIQUE NOT NULL,
-    FirstName TEXT NOT NULL,
-    MiddleName TEXT,
-    LastName TEXT NOT NULL,
-    IdentityDoc TEXT NOT NULL,
-    IdAddress INT NOT NULL,
-
-    FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress)
-
-);
 
 CREATE TABLE IF NOT EXISTS Employee (
     
-    IdPerson INT NOT NULL,
-    Status INT NOT NULL,
+    IdPerson INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
 
     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
 
@@ -91,9 +118,9 @@ CREATE TABLE IF NOT EXISTS Employee (
 
 CREATE TABLE IF NOT EXISTS Customer (
 
-    IdPerson INT NOT NULL,
-    Status INT NOT NULL,
-    Points INT NOT NULL,
+    IdPerson INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
+    Points INTEGER NOT NULL,
 
     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
 
@@ -101,27 +128,27 @@ CREATE TABLE IF NOT EXISTS Customer (
 
 CREATE TABLE IF NOT EXISTS Job (
 
-    IdJob PRIMARY KEY INT UNIQUE NOT NULL,
-    Job TEXT NOT NULL,
-    Salary INT NOT NULL
+    IdJob INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Job VARCHAR(20)NOT NULL,
+    Salary INTEGER NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS EmployeeJob (
 
-    IdJob INT NOT NULL,
-    IdPerson INT NOT NULL,
+    IdJob INTEGER NOT NULL,
+    IdPerson INTEGER NOT NULL,
     HireDate DATE,
 
-    FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
-    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+    CONSTRAINT jobKey FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
+    CONSTRAINT personKey FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
 
 );
 
 CREATE TABLE IF NOT EXISTS Shipment (
 
-    IdShipment PRIMARY KEY INT UNIQUE NOT NULL,
-    IdWarehouse INT NOT NULL,
+    IdShipment INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    IdWarehouse INTEGER NOT NULL,
     RequestDate DATE NOT NULL,
     DeliveryDate DATE NOT NULL
 
@@ -129,8 +156,8 @@ CREATE TABLE IF NOT EXISTS Shipment (
 
 CREATE TABLE IF NOT EXISTS ItemShipment (
 
-    IdShipment INT NOT NULL,
-    IdItem INT NOT NULL,
+    IdShipment INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
 
     FOREIGN KEY (IdShipment) REFERENCES Shipment (IdShipment),
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
@@ -138,11 +165,11 @@ CREATE TABLE IF NOT EXISTS ItemShipment (
 
 CREATE TABLE IF NOT EXISTS Promo (
 
-    IdPromo PRIMARY KEY INT UNIQUE NOT NULL,
-    IdItem INT NOT NULL,
+    IdPromo INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    IdItem INTEGER NOT NULL,
     InitialDateTime DATETIME NOT NULL,
     FinalDateTime DATETIME NOT NULL,
-    Percentage INT NOT NULL,
+    Percentage INTEGER NOT NULL,
 
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 
