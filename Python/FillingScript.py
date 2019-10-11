@@ -256,8 +256,10 @@ def generateBrands():
 
 def generateItem(IdItem, IdBrand):
 
+
     categories = [1,2,3,4,5,6,7,8,9]
     categoryDescription = ["Shirt", "Pants", "Shoes", "Skateboard", "Trucks", "Wheels", "Bearings", "Board", "Hat"]
+
     prices = [25,40,80,120,40,45,25,60,25]
     descriptions = ["Nice ", "Cool ", "Amazing ", "The best ", "Fire "]
 
@@ -266,6 +268,7 @@ def generateItem(IdItem, IdBrand):
     category = categories[ind]
     price = prices[ind]
     description = descriptions[ind%5] + categoryDescription[ind]
+
 
     today = date.today()
     entryDate = today.strftime("%Y-%m-%d")
@@ -280,6 +283,7 @@ def generateItems():
 
     contItem = 1
     contBrand = 1
+
 
     contLim = 0
 
@@ -309,3 +313,4 @@ def generateCustomer():
         queries += str(query) + ",\n"
 
     file = open("Queries/CustomerQuery.sql")
+

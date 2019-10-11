@@ -1,4 +1,5 @@
 INSERT INTO Items VALUES
+
 (1, 1, 1, 'Fire Trucks', 'Trucks', 40, 1, '2019-10-09'),
 (2, 2, 1, 'The best Skateboard', 'Skateboard', 120, 1, '2019-10-09'),
 (3, 3, 1, 'Nice Wheels', 'Wheels', 45, 1, '2019-10-09'),
