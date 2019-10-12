@@ -1,35 +1,35 @@
 -- Entidades 
 
 -- CREATE TABLE Country (
---     IdCountry INTEGER PRIMARY KEY,
+--     IdCountry SERIAL PRIMARY KEY,
 --     Name VARCHAR NOT NULL
 -- );
 
 -- CREATE TABLE State (
---     IdState INTEGER PRIMARY KEY,
+--     IdState SERIAL PRIMARY KEY,
 --     IdCountry INTEGER NOT NULL,
 --     Name VARCHAR NOT NULL,
 --     FOREIGN KEY (IdCountry) REFERENCES Country (IdCountry)
 -- );
 
 -- CREATE TABLE City (
---     IdCity INTEGER PRIMARY KEY,
+--     IdCity SERIAL PRIMARY KEY,
 --     IdState INTEGER NOT NULL,
 --     Name VARCHAR NOT NULL,
 --     FOREIGN KEY (IdState) REFERENCES State (IdState)
 -- );
 
 -- CREATE TABLE Address (
---     IdAddress INTEGER PRIMARY KEY,
+--     IdAddress SERIAL PRIMARY KEY,
 --     IdCity INTEGER NOT NULL,
 --     Detail VARCHAR NOT NULL,
 --     FOREIGN KEY (IdCity) REFERENCES City (IdCity)
 -- );
 
 -- CREATE TABLE Person (
---     IdPerson INTEGER PRIMARY KEY,
+--     IdPerson SERIAL PRIMARY KEY,
 --     Name VARCHAR NOT NULL,
---     MiddleName VARCHAR NOT NULL,
+--     MiddleName VARCHAR,
 --     LastName VARCHAR NOT NULL,
 --     IdentityDoc VARCHAR NOT NULL,
 --     IdAddress INTEGER NOT NULL,
@@ -50,13 +50,13 @@
 -- );
 
 -- CREATE TABLE Job (
---     IdJob INTEGER PRIMARY KEY,
+--     IdJob SERIAL PRIMARY KEY,
 --     Job VARCHAR NOT NULL,
 --     Salary INTEGER NOT NULL
 -- );
 
 -- CREATE TABLE Store (
---     IdStore INTEGER PRIMARY KEY,
+--     IdStore SERIAL PRIMARY KEY,
 --     Code INTEGER NOT NULL,
 --     IdAddress INTEGER NOT NULL,
 --     Status INTEGER NOT NULL,
@@ -65,25 +65,31 @@
 --     FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson)
 -- );
 
+-- CREATE TABLE Category (
+--     IdCategory SERIAL PRIMARY KEY,
+--     Name VARCHAR NOT NULL
+-- );
+
 -- CREATE TABLE Brand (
---     IdBrand INTEGER PRIMARY KEY,
+--     IdBrand SERIAL PRIMARY KEY,
 --     Name VARCHAR NOT NULL
 -- );
 
 -- CREATE TABLE Item (
---    IdItem INTEGER PRIMARY KEY,
+--    IdItem SERIAL PRIMARY KEY,
 --    Code INTEGER NOT NULL,
 --    IdBrand INTEGER NOT NULL,
 --    Description VARCHAR NOT NULL,
---    Category INTEGER NOT NULL,
+--    IdCategory INTEGER NOT NULL,
 --    Price INTEGER NOT NULL,
 --    Status INTEGER,
 --    EntryDate DATE NOT NULL,
---    FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand)
+--    FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand),
+--    FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory)
 -- );
 
 -- CREATE TABLE Promo (
---     IdPromo INTEGER PRIMARY KEY,
+--     IdPromo SERIAL PRIMARY KEY,
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
 --     InitialDateTime timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
@@ -92,7 +98,7 @@
 -- );
 
 -- CREATE TABLE Shipment (
---     IdShipment INTEGER PRIMARY KEY,
+--     IdShipment SERIAL PRIMARY KEY,
 --     IdStore INTEGER NOT NULL,
 --     RequestDate DATE NOT NULL,
 --     DeliveryDate DATE NOT NULL,
@@ -100,7 +106,7 @@
 -- );
 
 -- CREATE TABLE Receipt (
---     IdReceipt INTEGER PRIMARY KEY,
+--     IdReceipt SERIAL PRIMARY KEY,
 --     IdPerson INTEGER,
 --     IdStore INTEGER NOT NULL,
 --     Price INTEGER NOT NULL,
@@ -122,7 +128,6 @@
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
 --     Quantity INTEGER NOT NULL,
---     Details VARCHAR NOT NULL,
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
 --     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 -- );
@@ -193,7 +198,6 @@
 -- SELECT * FROM ConsultStore(1);
 
 
-
 -- CREATE OR REPLACE FUNCTION DropStore (id INTEGER) 
 -- RETURNS VOID AS $$
 -- BEGIN
@@ -250,3 +254,27 @@
 
 -- DROP FUNCTION ConsultStore(id INTEGER);
 -- SELECT * FROM ConsultStore(1);
+
+
+
+
+-- DROP ALL
+-- DROP TABLE Country CASCADE;
+-- DROP TABLE State CASCADE;
+-- DROP TABLE Address CASCADE;
+-- DROP TABLE Brand CASCADE;
+-- DROP TABLE City CASCADE;
+-- DROP TABLE Customer CASCADE;
+-- DROP TABLE Employee CASCADE;
+-- DROP TABLE EmployeeJob CASCADE;
+-- DROP TABLE Item CASCADE;
+-- DROP TABLE ItemReceipt CASCADE;
+-- DROP TABLE ItemShipment CASCADE;
+-- DROP TABLE ItemStore CASCADE;
+-- DROP TABLE ItemWarehouse CASCADE;
+-- DROP TABLE Job CASCADE;
+-- DROP TABLE Person CASCADE;
+-- DROP TABLE Promo CASCADE;
+-- DROP TABLE Receipt CASCADE;
+-- DROP TABLE Shipment CASCADE;
+-- DROP TABLE Store CASCADE;
