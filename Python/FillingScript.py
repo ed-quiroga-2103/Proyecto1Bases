@@ -266,7 +266,7 @@ def generateItem(IdItem, IdBrand):
     category = categories[ind]
     price = prices[ind]
     description = descriptions[ind%5] + categoryDescription[ind]
-
+    
     today = date.today()
     entryDate = today.strftime("%Y-%m-%d")
 
@@ -309,3 +309,4 @@ def generateCustomer():
         queries += str(query) + ",\n"
 
     file = open("Queries/CustomerQuery.sql")
+

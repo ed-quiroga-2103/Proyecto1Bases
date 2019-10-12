@@ -1876,3 +1876,4 @@ INSERT INTO Test1.Customer VALUES
 (2,1,0),
 (3,1,0),
 (4,1,0);
+

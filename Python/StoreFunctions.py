@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-
 import pg
 
 from datetime import date
@@ -46,6 +45,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
         #LA CONDICION DE LA PREGUNTA ESTA MAL
         #NO AUMENTA EL SUBINDICE SI SE DECIDE NO COMPRAR
         updateItemStock(itemIds[ind], stock - QuantItem[ind])
+
         totalPrice += getItemPrice(itemIds[ind])*QuantItem[ind]
 
         ind+=1
@@ -59,6 +59,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
     queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
 
     updateCustomerPoinst(IdCustomer, int(totalPrice*0.10))
+
 
     cursor.execute(query, queryData)
 
@@ -214,3 +215,4 @@ def createPromo(IdItem, initialDateTime, finalDateTime, percentage):
     connection.commit()
 
     connection.close()
+
