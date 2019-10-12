@@ -122,7 +122,6 @@
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
 --     Quantity INTEGER NOT NULL,
---     Details VARCHAR NOT NULL,
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
 --     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 -- );

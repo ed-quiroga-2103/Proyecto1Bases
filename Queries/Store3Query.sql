@@ -1,0 +1,2 @@
+INSERT INTO Store VALUES 
+(3, 3, 229, 1, 611);
