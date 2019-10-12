@@ -1861,3 +1861,18 @@ INSERT INTO Item VALUES
 (248, 248, 25, 'Cool Pants', 2, 40, 1, '2019-10-09'),
 (249, 249, 25, 'Amazing Board', 8, 60, 1, '2019-10-09'),
 (250, 250, 25, 'Fire Trucks', 5, 40, 1, '2019-10-09');
+
+INSERT INTO Test1.ItemStore VALUES
+(1,5),
+(2,5),
+(3,5),
+(4,5),
+(5,5),
+(6,5),
+(7,5);
+
+INSERT INTO Test1.Customer VALUES
+(1,1,0),
+(2,1,0),
+(3,1,0),
+(4,1,0);

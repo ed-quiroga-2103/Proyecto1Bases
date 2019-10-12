@@ -31,11 +31,11 @@
 -- );
 
 -- CREATE TABLE Promo (
---     IdPromo INTEGER PRIMARY KEY,
+--     IdPromo SERIAL PRIMARY KEY,
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
---     InitialDateTime DATE/TIME NOT NULL,
---     FinalDateTime DATE/TIME NOT NULL,
+--     InitialDate DATE NOT NULL,
+--     FinalDate DATE NOT NULL,
 --     Porcentaje INTEGER NOT NULL
 -- );
 

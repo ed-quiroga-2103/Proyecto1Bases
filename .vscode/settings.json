@@ -1,0 +1,26 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 100,
+            "database": "testpsql",
+            "dialect": "PostgreSQL",
+            "name": "localhost",
+            "password": "root",
+            "port": 5432,
+            "server": "localhost",
+            "username": "root"
+        },
+        {
+            "connectionTimeout": 100,
+            "database": "Test1",
+            "dialect": "MySQL",
+            "isActive": false,
+            "isConnected": true,
+            "name": "localhost",
+            "password": "root",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
+        }
+    ]
+}
