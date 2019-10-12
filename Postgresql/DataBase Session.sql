@@ -1,14 +1,8 @@
--- CREATE TABLE Warehouse (
---    IdWarehouse INTEGER PRIMARY KEY
--- );
-
 -- CREATE TABLE Shipment (
 --     IdShipment INTEGER PRIMARY KEY,
---     IdWarehouse INTEGER NOT NULL,
 --     IdStore INTEGER NOT NULL,
 --     RequestDate DATE NOT NULL,
 --     DeliveryDate DATE NOT NULL,
---     FOREIGN KEY (IdWarehouse) REFERENCES Warehouse (IdWarehouse),
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
 -- );
 
@@ -31,11 +25,11 @@
 -- );
 
 -- CREATE TABLE Promo (
---     IdPromo INTEGER PRIMARY KEY,
+--     IdPromo SERIAL PRIMARY KEY,
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
---     InitialDateTime DATE/TIME NOT NULL,
---     FinalDateTime DATE/TIME NOT NULL,
+--     InitialDate DATE NOT NULL,
+--     FinalDate DATE NOT NULL,
 --     Porcentaje INTEGER NOT NULL
 -- );
 
@@ -48,7 +42,6 @@
 --     IdWarehouse INTEGER NOT NULL,
 --     FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress),
 --     FOREIGN KEY (IdAdmin) REFERENCES Admin (IdAdmin),
---     FOREIGN KEY (IdWarehouse) REFERENCES Warehouse (IdWarehouse)
 -- );
 
 -- CREATE TABLE ItemStore (

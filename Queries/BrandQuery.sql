@@ -1,5 +1,12 @@
 USE Test1;
 
+CREATE TABLE IF NOT EXISTS Brand(
+
+    IdBrand INTEGER PRIMARY KEY UNIQUE NOT NULL,
+    Name VARCHAR(20) NOT NULL
+
+);
+
 INSERT INTO Brand VALUES
 (1, 'Ricta'),
 (2, 'C1rca'),
