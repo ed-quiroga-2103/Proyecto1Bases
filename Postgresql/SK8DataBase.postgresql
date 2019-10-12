@@ -55,18 +55,14 @@
 --     Salary INTEGER NOT NULL
 -- );
 
--- CREATE TABLE Admin (
---     IdAdmin INTEGER PRIMARY KEY
--- );
-
 -- CREATE TABLE Store (
 --     IdStore INTEGER PRIMARY KEY,
---     Code VARCHAR NOT NULL,
+--     Code INTEGER NOT NULL,
 --     IdAddress INTEGER NOT NULL,
 --     Status INTEGER NOT NULL,
 --     IdAdmin INTEGER NOT NULL,
 --     FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress),
---     FOREIGN KEY (IdAdmin) REFERENCES Admin (IdAdmin)
+--     FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson)
 -- );
 
 -- CREATE TABLE Brand (
@@ -76,10 +72,10 @@
 
 -- CREATE TABLE Item (
 --    IdItem INTEGER PRIMARY KEY,
---    Code VARCHAR NOT NULL,
+--    Code INTEGER NOT NULL,
 --    IdBrand INTEGER NOT NULL,
 --    Description VARCHAR NOT NULL,
---    Category VARCHAR NOT NULL,
+--    Category INTEGER NOT NULL,
 --    Price INTEGER NOT NULL,
 --    Status INTEGER,
 --    EntryDate DATE NOT NULL,
@@ -105,7 +101,7 @@
 
 -- CREATE TABLE Receipt (
 --     IdReceipt INTEGER PRIMARY KEY,
---     IdPerson INTEGER NOT NULL,
+--     IdPerson INTEGER,
 --     IdStore INTEGER NOT NULL,
 --     Price INTEGER NOT NULL,
 --     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
@@ -154,4 +150,103 @@
 --     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
 -- );
+ 
 
+-- CRUD STORE
+
+-- CREATE OR REPLACE FUNCTION InsertStore (IdStore INTEGER, Code INTEGER, IdAddress INTEGER, Status INTEGER, IdAdmin INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     INSERT INTO Store VALUES (IdStore,Code,IdAddress,Status,IdAdmin);
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+-- SELECT InsertStore(3,3,1,1,1);
+
+-- CREATE OR REPLACE FUNCTION ConsultStore(id INTEGER) 
+--    RETURNS TABLE (
+--      IdStore INTEGER,
+--      Code INTEGER,
+--      IdAddress INTEGER,
+--      Status INTEGER,
+--      IdAdmin INTEGER
+--     ) 
+-- AS $Body$
+-- BEGIN
+--    RETURN QUERY 
+--         SELECT 
+--             S.IdStore,
+--             S.Code,
+--             S.IdAddress,
+--             S.Status,
+--             S.IdAdmin
+--         FROM
+--             Store S
+--         WHERE
+--             S.IdStore = id;
+-- END; 
+-- $Body$ 
+-- LANGUAGE PLPGSQL;
+
+-- DROP FUNCTION ConsultStore(id INTEGER);
+-- SELECT * FROM ConsultStore(1);
+
+
+
+-- CREATE OR REPLACE FUNCTION DropStore (id INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     DELETE FROM Store S
+--     WHERE S.IdStore = id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+-- DROP FUNCTION ConsultStore(id INTEGER);
+-- SELECT DropStore(3);
+-- SELECT * FROM Store;
+
+
+-- CRUD Employee
+
+-- CREATE OR REPLACE FUNCTION InsertEmployee (IdPerson INTEGER, Name VARCHAR,  MiddleName VARCHAR, LastName VARCHAR, IdentityDoc VARCHAR, IdAddress INTEGER,Status INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     INSERT INTO Person VALUES (IdPerson, Name,  MiddleName , LastName , IdentityDoc , IdAddress);
+--     INSERT INTO Employee VALUES (IdPerson , Status); 
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+-- SELECT InsertEmployee(3,'Eduardo','Quiroga','Alfaro','1-1430-0632',1,1);
+-- SELECT * FROM Person;
+
+
+-- CREATE OR REPLACE FUNCTION ConsultEmployee(id INTEGER) 
+--    RETURNS TABLE (
+--      IdStore INTEGER,
+--      Code INTEGER,
+--      IdAddress INTEGER,
+--      Status INTEGER,
+--      IdAdmin INTEGER
+--     ) 
+-- AS $Body$
+-- BEGIN
+--    RETURN QUERY 
+--         SELECT 
+--             S.IdStore,
+--             S.Code,
+--             S.IdAddress,
+--             S.Status,
+--             S.IdAdmin
+--         FROM
+--             Store S
+--         WHERE
+--             S.IdStore = id;
+-- END; 
+-- $Body$ 
+-- LANGUAGE PLPGSQL;
+
+-- DROP FUNCTION ConsultStore(id INTEGER);
+-- SELECT * FROM ConsultStore(1);
