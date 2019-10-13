@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS Shipment (
 
     IdShipment INTEGER PRIMARY KEY UNIQUE NOT NULL,
     RequestDate DATE NOT NULL,
-    DeliveryDate DATE NOT NULL,
+    DeliveryDate DATE NOT NULL
 
 
 );

@@ -28,7 +28,7 @@ CREATE TABLE Address (
 
 CREATE TABLE Person (
     IdPerson SERIAL PRIMARY KEY,
-    Name VARCHAR NOT NULL,
+    FirstName VARCHAR NOT NULL,
     MiddleName VARCHAR,
     LastName VARCHAR NOT NULL,
     IdentityDoc VARCHAR NOT NULL,
@@ -117,7 +117,47 @@ CREATE TABLE Receipt (
     FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson)
 );
 
+CREATE TABLE StoreRequest (
+
+    IdRequest SERIAL PRIMARY KEY,
+    IdStore INTEGER NOT NULL,
+    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+
+);
+
+CREATE TABLE WarehouseRequest(
+
+    IdRequest SERIAL PRIMARY KEY,
+    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+
+);
+
 -- Tablas Cruz
+
+CREATE TABLE StoreRequestItem (
+
+    IdRequest INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    Status INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+);
+
+CREATE TABLE WarehouseRequest(
+
+    IdRequest INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+
+    FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+);
+
 
 CREATE TABLE ItemShipment (
     IdShipment INTEGER NOT NULL,
@@ -158,6 +198,86 @@ CREATE TABLE EmployeeJob (
     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
 );
  
+
+
+-- FUNCIONES_________________________________________________________________
+
+
+CREATE OR REPLACE FUNCTION getItemStore(id INTEGER) 
+   RETURNS TABLE (
+     IdItem INTEGER,
+     Quantity INTEGER
+    ) 
+AS $Body$
+BEGIN
+   RETURN QUERY 
+        SELECT 
+            ItemStore.IdItem,
+            ItemStore.Quantity
+        FROM
+            Store S
+            
+        INNER JOIN ItemStore  ON ItemStore.IdStore = S.IdStore
+        INNER JOIN Item ON Item.IdItem = ItemStore.IdItem
+
+        WHERE S.IdStore = id AND Item.Status = 1;
+END; 
+$Body$ 
+LANGUAGE PLPGSQL;
+
+
+CREATE OR REPLACE FUNCTION getEmployeeStore(id INTEGER) 
+   RETURNS TABLE (
+     IdJob INTEGER,
+     IdPerson INTEGER,
+     HireDate DATE
+    ) 
+AS $Body$
+BEGIN
+   RETURN QUERY 
+        SELECT 
+            EmployeeJob.IdJob,
+            EmployeeJob.IdPerson,
+            EmployeeJob.HireDate
+        FROM
+            Store S
+            
+        INNER JOIN EmployeeJob ON EmployeeJob.IdStore = S.IdStore
+        INNER JOIN Employee ON Employee.IdPerson = EmployeeJob.IdPerson
+
+        WHERE S.IdStore = id AND Employee.Status = 1;
+END; 
+$Body$ 
+LANGUAGE PLPGSQL;
+
+
+CREATE OR REPLACE FUNCTION getPromoStore(id INTEGER) 
+   RETURNS TABLE (
+     IdPromo INTEGER,
+     IdItem INTEGER,
+     InitialDateTime DATE,
+     FinalDateTime DATE,
+     Porcentage INTEGER
+    ) 
+AS $Body$
+BEGIN
+   RETURN QUERY 
+        SELECT 
+            Promo.IdPromo,
+            Promo.IdItem,
+            Promo.InitialDateTime,
+            Promo.FinalDateTime,
+            Promo.Porcentage
+        FROM
+            Store S
+            
+        INNER JOIN Promo ON Promo.IdStore = S.IdStore
+
+        WHERE S.IdStore = id;
+END; 
+$Body$ 
+LANGUAGE PLPGSQL;
+
 
 -- CRUD STORE
 
