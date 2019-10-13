@@ -90,29 +90,28 @@ CREATE TABLE IF NOT EXISTS ItemStore (
 
 );
 
+    CREATE TABLE IF NOT EXISTS Receipt (
 
-CREATE TABLE IF NOT EXISTS Receipt (
+        IdReceipt INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
+        IdEmployee INTEGER NOT NULL,
+        IdCustomer INTEGER,
+        Price INTEGER NOT NULL,
+        SellingDate DATE NOT NULL,
 
-    IdReceipt INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
-    IdEmployee INTEGER NOT NULL,
-    IdCustomer INTEGER,
-    Price INTEGER NOT NULL,
-    SellingDate DATE NOT NULL,
+        FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
+        FOREIGN KEY (IdCustomer) REFERENCES Person (IdPerson)
 
-    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
-    FOREIGN KEY (IdCustomer) REFERENCES Person (IdPerson)
+    );
 
-);
+    CREATE TABLE IF NOT EXISTS ItemReceipt (
 
-CREATE TABLE IF NOT EXISTS ItemReceipt (
+        IdItem INTEGER NOT NULL,
+        IdReceipt INTEGER NOT NULL,
+        Quantity INTEGER NOT NULL,
 
-    IdItem INTEGER NOT NULL,
-    IdReceipt INTEGER NOT NULL,
-    Quantity INTEGER NOT NULL,
-
-    FOREIGN KEY (IdItem) REFERENCES Item (IdItem),
-    FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt)
-);
+        FOREIGN KEY (IdItem) REFERENCES Item (IdItem),
+        FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt)
+    );
 
 
 
@@ -182,4 +181,4 @@ CREATE TABLE IF NOT EXISTS Promo (
 
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 
-);
+);  

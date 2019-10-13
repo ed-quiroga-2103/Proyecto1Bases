@@ -1490,15 +1490,15 @@ INSERT INTO Brand VALUES
 (25, 'Zoo York');
 
 INSERT INTO Category VALUES
-(1, "Shirt"),
-(2, "Pants"),
-(3, "Shoes"),
-(4, "Skateboard"),
-(5, "Trucks"),
-(6, "Wheels"),
-(7, "Bearings"),
-(8, "Board"),
-(9, "Hat");
+(1, 'Shirt'),
+(2, 'Pants'),
+(3, 'Shoes'),
+(4, 'Skateboard'),
+(5, 'Trucks'),
+(6, 'Wheels'),
+(7, 'Bearings'),
+(8, 'Board'),
+(9, 'Hat');
 
 INSERT INTO Item VALUES
 (1, 1, 1, 'Nice Shirt', 1, 25, 1, '2019-10-09'),
@@ -3793,7 +3793,14 @@ INSERT INTO Employee VALUES
 (840, 1), 
 (1286, 1);
 
-INSERT INTO EmployeeJob VALUES
+INSERT INTO Job VALUES
+(1, 'Admin', 80000),
+(2, 'Cashier', 30000),
+(3, 'Sales Associate', 40000),
+(4, 'CSR', 40000),
+(5, 'Cleaning', 30000);
+
+INSERT INTO EmployeeJob (IdJob, IdPerson,IdStore,HireDate) VALUES
 (1, 388, 1, '2019-10-12'),
 (4, 1101, 1, '2019-10-12'),
 (5, 215, 1, '2019-10-12'),

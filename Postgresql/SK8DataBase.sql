@@ -1,160 +1,162 @@
 -- Entidades 
 
--- CREATE TABLE Country (
---     IdCountry SERIAL PRIMARY KEY,
---     Name VARCHAR NOT NULL
--- );
+CREATE TABLE Country (
+    IdCountry SERIAL PRIMARY KEY,
+    Name VARCHAR NOT NULL
+);
 
--- CREATE TABLE State (
---     IdState SERIAL PRIMARY KEY,
---     IdCountry INTEGER NOT NULL,
---     Name VARCHAR NOT NULL,
---     FOREIGN KEY (IdCountry) REFERENCES Country (IdCountry)
--- );
+CREATE TABLE State (
+    IdState SERIAL PRIMARY KEY,
+    IdCountry INTEGER NOT NULL,
+    Name VARCHAR NOT NULL,
+    FOREIGN KEY (IdCountry) REFERENCES Country (IdCountry)
+);
 
--- CREATE TABLE City (
---     IdCity SERIAL PRIMARY KEY,
---     IdState INTEGER NOT NULL,
---     Name VARCHAR NOT NULL,
---     FOREIGN KEY (IdState) REFERENCES State (IdState)
--- );
+CREATE TABLE City (
+    IdCity SERIAL PRIMARY KEY,
+    IdState INTEGER NOT NULL,
+    Name VARCHAR NOT NULL,
+    FOREIGN KEY (IdState) REFERENCES State (IdState)
+);
 
--- CREATE TABLE Address (
---     IdAddress SERIAL PRIMARY KEY,
---     IdCity INTEGER NOT NULL,
---     Detail VARCHAR NOT NULL,
---     FOREIGN KEY (IdCity) REFERENCES City (IdCity)
--- );
+CREATE TABLE Address (
+    IdAddress SERIAL PRIMARY KEY,
+    IdCity INTEGER NOT NULL,
+    Detail VARCHAR NOT NULL,
+    FOREIGN KEY (IdCity) REFERENCES City (IdCity)
+);
 
--- CREATE TABLE Person (
---     IdPerson SERIAL PRIMARY KEY,
---     Name VARCHAR NOT NULL,
---     MiddleName VARCHAR,
---     LastName VARCHAR NOT NULL,
---     IdentityDoc VARCHAR NOT NULL,
---     IdAddress INTEGER NOT NULL,
---     FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress)
--- );
+CREATE TABLE Person (
+    IdPerson SERIAL PRIMARY KEY,
+    Name VARCHAR NOT NULL,
+    MiddleName VARCHAR,
+    LastName VARCHAR NOT NULL,
+    IdentityDoc VARCHAR NOT NULL,
+    IdAddress INTEGER NOT NULL,
+    FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress)
+);
 
--- CREATE TABLE Customer (
---     IdPerson INTEGER NOT NULL,
---     Status INTEGER NOT NULL,
---     Points INTEGER NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
--- );
+CREATE TABLE Customer (
+    IdPerson INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
+    Points INTEGER NOT NULL,
+    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+);
 
--- CREATE TABLE Employee (
---     IdPerson INTEGER NOT NULL,
---     Status INTEGER NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
--- );
+CREATE TABLE Employee (
+    IdPerson INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
+    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+);
 
--- CREATE TABLE Job (
---     IdJob SERIAL PRIMARY KEY,
---     Job VARCHAR NOT NULL,
---     Salary INTEGER NOT NULL
--- );
+CREATE TABLE Job (
+    IdJob SERIAL PRIMARY KEY,
+    Job VARCHAR NOT NULL,
+    Salary INTEGER NOT NULL
+);
 
--- CREATE TABLE Store (
---     IdStore SERIAL PRIMARY KEY,
---     Code INTEGER NOT NULL,
---     IdAddress INTEGER NOT NULL,
---     Status INTEGER NOT NULL,
---     IdAdmin INTEGER NOT NULL,
---     FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress),
---     FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson)
--- );
+CREATE TABLE Store (
+    IdStore SERIAL PRIMARY KEY,
+    Code INTEGER NOT NULL,
+    IdAddress INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
+    IdAdmin INTEGER NOT NULL,
+    FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress),
+    FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson)
+);
 
--- CREATE TABLE Category (
---     IdCategory SERIAL PRIMARY KEY,
---     Name VARCHAR NOT NULL
--- );
+CREATE TABLE Category (
+    IdCategory SERIAL PRIMARY KEY,
+    Name VARCHAR NOT NULL
+);
 
--- CREATE TABLE Brand (
---     IdBrand SERIAL PRIMARY KEY,
---     Name VARCHAR NOT NULL
--- );
+CREATE TABLE Brand (
+    IdBrand SERIAL PRIMARY KEY,
+    Name VARCHAR NOT NULL
+);
 
--- CREATE TABLE Item (
---    IdItem SERIAL PRIMARY KEY,
---    Code INTEGER NOT NULL,
---    IdBrand INTEGER NOT NULL,
---    Description VARCHAR NOT NULL,
---    IdCategory INTEGER NOT NULL,
---    Price INTEGER NOT NULL,
---    Status INTEGER,
---    EntryDate DATE NOT NULL,
---    FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand),
---    FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory)
--- );
+CREATE TABLE Item (
+   IdItem SERIAL PRIMARY KEY,
+   Code INTEGER NOT NULL,
+   IdBrand INTEGER NOT NULL,
+   Description VARCHAR NOT NULL,
+   IdCategory INTEGER NOT NULL,
+   Price INTEGER NOT NULL,
+   Status INTEGER,
+   EntryDate DATE NOT NULL,
+   FOREIGN KEY (IdBrand) REFERENCES Brand (IdBrand),
+   FOREIGN KEY (IdCategory) REFERENCES Category (IdCategory)
+);
 
--- CREATE TABLE Promo (
---     IdPromo SERIAL PRIMARY KEY,
---     IdStore INTEGER NOT NULL,
---     IdItem INTEGER NOT NULL,
---     InitialDateTime timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
---     FinalDateTime timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
---     Porcentaje INTEGER NOT NULL
--- );
+CREATE TABLE Promo (
+    IdPromo SERIAL PRIMARY KEY,
+    IdStore INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    InitialDateTime timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    FinalDateTime timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    Porcentaje INTEGER NOT NULL
+);
 
--- CREATE TABLE Shipment (
---     IdShipment SERIAL PRIMARY KEY,
---     IdStore INTEGER NOT NULL,
---     RequestDate DATE NOT NULL,
---     DeliveryDate DATE NOT NULL,
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
--- );
+CREATE TABLE Shipment (
+    IdShipment SERIAL PRIMARY KEY,
+    IdStore INTEGER NOT NULL,
+    RequestDate DATE NOT NULL,
+    DeliveryDate DATE NOT NULL,
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+);
 
--- CREATE TABLE Receipt (
---     IdReceipt SERIAL PRIMARY KEY,
---     IdPerson INTEGER,
---     IdStore INTEGER NOT NULL,
---     Price INTEGER NOT NULL,
---     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
--- );
+CREATE TABLE Receipt (
+    IdReceipt SERIAL PRIMARY KEY,
+    IdEmployee INTEGER NOT NULL, 
+    IdPerson INTEGER,
+    IdStore INTEGER NOT NULL,
+    Price INTEGER NOT NULL,
+    SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
+    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson)
+);
 
 -- Tablas Cruz
 
--- CREATE TABLE ItemShipment (
---     IdShipment INTEGER NOT NULL,
---     IdItem INTEGER NOT NULL,
---     FOREIGN KEY (IdShipment) REFERENCES Shipment (IdShipment),
---     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
--- );
+CREATE TABLE ItemShipment (
+    IdShipment INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    FOREIGN KEY (IdShipment) REFERENCES Shipment (IdShipment),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+);
 
--- CREATE TABLE ItemStore (
---     IdStore INTEGER NOT NULL,
---     IdItem INTEGER NOT NULL,
---     Quantity INTEGER NOT NULL,
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
---     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
--- );
+CREATE TABLE ItemStore (
+    IdStore INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+);
 
--- CREATE TABLE ItemReceipt (
---     IdReceipt INTEGER NOT NULL,
---     IdItem INTEGER NOT NULL,
---     Quantity INTEGER NOT NULL,
---     FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt),
---     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
--- );
+CREATE TABLE ItemReceipt (
+    IdReceipt INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+);
 
--- CREATE TABLE ItemWarehouse (
---     IdItem INTEGER NOT NULL,
---     Quantity INTEGER NOT NULL,
---     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
--- );
+CREATE TABLE ItemWarehouse (
+    IdItem INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+);
 
--- CREATE TABLE EmployeeJob (
---     IdJob INTEGER NOT NULL,
---     IdPerson INTEGER NOT NULL,
---     IdStore INTEGER NOT NULL,
---     HireDate DATE NOT NULL,
---     FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
--- );
+CREATE TABLE EmployeeJob (
+    IdJob INTEGER NOT NULL,
+    IdPerson INTEGER NOT NULL,
+    IdStore INTEGER NOT NULL,
+    HireDate DATE NOT NULL,
+    FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
+    FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+);
  
 
 -- CRUD STORE
