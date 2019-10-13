@@ -1,14 +1,36 @@
-import psycopg2
+import mysql.connector
+from mysql.connector import Error
+import pg
 
-conn = psycopg2.connect(database="sk8database", user = "postgres", password = "hastael8", host = "127.0.0.1", port = "5432")
+from datetime import date
 
-print ("Opened database successfully")
+def main():
+      getItemStore(1)
 
-cur = conn.cursor()
+def getItemStore(IdStore):
+      connection = pg.DB(dbname='sk8database', host='127.0.0.1', port = 5432, user='root', passwd='root')
+      
+      query = "SELECT * FROM getItemStore(" + str(IdStore) + ");"
 
-cur.execute("INSERT INTO COUNTRY (IDCOUNTRY,NAME) \
-      VALUES (1, 'CostaRica')");
+      print( connection.query(query))
 
-conn.commit()
-print ("Complete insertion of country");
-conn.close()
+      connection.close()
+      
+def getEmployeeStore(IdStore):
+      connection = pg.DB(dbname='sk8database', host='127.0.0.1', port = 5432, user='root', passwd='root')
+      
+      query = "SELECT * FROM getEmployeeStore(" + str(IdStore) + ");"
+
+      print( connection.query(query))
+
+      connection.close()
+      
+def getPromoStore(IdStore):
+      connection = pg.DB(dbname='sk8database', host='127.0.0.1', port = 5432, user='root', passwd='root')
+      
+      query = "SELECT * FROM getPromoStore(" + str(IdStore) + ");"
+
+      print( connection.query(query))
+
+      connection.close()
+
