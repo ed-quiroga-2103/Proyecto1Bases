@@ -117,7 +117,29 @@ CREATE TABLE Receipt (
     FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson)
 );
 
+CREATE TABLE StoreRequest (
+
+    IdRequest SERIAL PRIMARY KEY,
+    IdStore INTEGER NOT NULL,
+    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+
+    FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+
+);
+
 -- Tablas Cruz
+
+CREATE TABLE StoreRequestItem (
+
+    IdRequest INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
+    Status INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+);
+
 
 CREATE TABLE ItemShipment (
     IdShipment INTEGER NOT NULL,

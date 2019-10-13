@@ -4,13 +4,14 @@ import pg
 
 from datetime import date
 
+db = "Test"
 
-def getLastReceipt():
+def getLastReceipt(idStore):
 
     query = 'SELECT IdReceipt FROM Receipt ORDER BY IdReceipt DESC LIMIT 1;'
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -29,7 +30,7 @@ def getLastReceipt():
 
     return id
 
-def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
+def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
     totalPrice = 0
     ind = 0
 
@@ -38,7 +39,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
 
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -47,7 +48,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
     cursor.execute("SELECT LAST_INSERT_ID() FROM Receipt;")
     records = cursor.fetchall()
     
-    IdReceipt = getLastReceipt()
+    IdReceipt = getLastReceipt(idStore)
 
 
 
@@ -71,9 +72,9 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
         #NO ESTA FUNCIONANDO BIEN
         #LA CONDICION DE LA PREGUNTA ESTA MAL
         #NO AUMENTA EL SUBINDICE SI SE DECIDE NO COMPRAR
-        updateItemStock(itemIds[ind], stock - QuantItem[ind])
+        updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
 
-        totalPrice += getItemPrice(itemIds[ind])*QuantItem[ind]
+        totalPrice += getItemPrice(itemIds[ind], idStore)*QuantItem[ind]
 
         ind+=1
 
@@ -85,7 +86,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
     query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
     queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
 
-    updateCustomerPoints(IdCustomer, int(totalPrice*0.10))
+    updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
 
 
     cursor.execute(query, queryData)
@@ -109,12 +110,12 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer):
 
     return query
 
-def getItemPrice(itemId):
+def getItemPrice(itemId, idStore):
 
     query = "SELECT Price FROM Item WHERE IdItem = "+str(itemId)+";"
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -127,11 +128,11 @@ def getItemPrice(itemId):
 
     return records[0][0]
 
-def updateItemStock(itemId, quantity):
+def updateItemStock(itemId, quantity, idStore):
 
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -151,11 +152,11 @@ def updateItemStock(itemId, quantity):
 
     return
 
-def getItemsWithCeroStock():
+def getItemsWithCeroStock(idStore):
 
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -174,23 +175,10 @@ def getItemsWithCeroStock():
     
     return itemIds
 
-def generateItemRequest(IdRequest):
-
-    query = ""
-
-    ids = getItemsWithCeroStock()
-
-    for i in range(len(ids) - 1):
-        query += str((IdRequest, ids[i])) + ",\n "
-
-    query += str((IdRequest, ids[-1])) + ";"
-
-    return query
-
-def updateCustomerPoints(IdCustomer, points):
+def updateCustomerPoints(IdCustomer, points, idStore):
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -211,9 +199,9 @@ def updateCustomerPoints(IdCustomer, points):
 
     connection.close()
 
-def modifyCustomerPoints(IdCustomer, points):
+def modifyCustomerPoints(IdCustomer, points, idStore):
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -237,7 +225,7 @@ def modifyCustomerPoints(IdCustomer, points):
 def sendPromos(idStore):
     
     #LA FRAGMENTACION TAMBIEN TIENE QUE HACERSE CON LAS PROMOCIONES
-    data = getPromos()
+    data = getPromos(idStore)
 
     connection = pg.DB(host='localhost',
                         user='root',
@@ -253,10 +241,10 @@ def sendPromos(idStore):
 
     connection.close()
 
-def createPromo(IdItem, initialDateTime, finalDateTime, percentage):
+def createPromo(IdItem, initialDateTime, finalDateTime, percentage, idStore):
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -272,7 +260,7 @@ def createPromo(IdItem, initialDateTime, finalDateTime, percentage):
 
     connection.close()
 
-def getPromos():
+def getPromos(idStore):
 
     today = date.today()
     currentDate = today.strftime("%Y-%m-%d")
@@ -280,7 +268,7 @@ def getPromos():
     
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -294,7 +282,7 @@ def getPromos():
 
     return data
 
-def getReceipts():
+def getReceipts(idStore):
 
     today = date.today()
     currentDate = today.strftime("%Y-%m-%d")
@@ -302,7 +290,7 @@ def getReceipts():
     
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -318,7 +306,7 @@ def getReceipts():
 
 def sendReceipts(idStore):
 
-    receipts = getReceipts()
+    receipts = getReceipts(idStore)
 
     connection = pg.DB(host='localhost',
                        user='root',
@@ -335,9 +323,9 @@ def sendReceipts(idStore):
 
     connection.close()
 
-    sendItemReceipt()
+    sendItemReceipt(idStore)
 
-def getItemReceipt():
+def getItemReceipt(idStore):
     
     today = date.today()
     currentDate = today.strftime("%Y-%m-%d")
@@ -348,7 +336,7 @@ def getItemReceipt():
     query += currentDate + "';"
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -359,9 +347,9 @@ def getItemReceipt():
 
     return data
 
-def sendItemReceipt():
+def sendItemReceipt(idStore):
 
-    data = getItemReceipt()
+    data = getItemReceipt(idStore)
 
     connection = pg.DB(host='localhost',
                        user='root',
@@ -378,10 +366,10 @@ def sendItemReceipt():
 
     connection.close()
 
-def getStock():
+def getStock(idStore):
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -397,7 +385,7 @@ def getStock():
 
 def updateStock(idStore):
 
-    stock = getStock()
+    stock = getStock(idStore)
 
     connection = pg.DB(host='localhost',
                        user='root',
@@ -426,12 +414,12 @@ def updateWarehouse(idStore):
 
     sendPromos(idStore)
 
-def getCustomerPoints(IdCustomer):
+def getCustomerPoints(IdCustomer, idStore):
 
     query = "SELECT Points FROM Customer WHERE IdPerson = " + str(IdCustomer) + ";"
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -448,11 +436,11 @@ def getCustomerPoints(IdCustomer):
 
     return points
 
-def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
+def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
     totalPrice = 0
     ind = 0
 
-    points = getCustomerPoints(IdCustomer)
+    points = getCustomerPoints(IdCustomer, idStore)
 
     if points == -1:
         print("The customer is not registered")
@@ -464,7 +452,7 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
 
 
     connection = mysql.connector.connect(host='localhost',
-                                         database='Test1',
+                                         database=db + str(idStore),
                                          user='root',
                                          password='root')
 
@@ -473,7 +461,7 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
     cursor.execute("SELECT LAST_INSERT_ID() FROM Receipt;")
     records = cursor.fetchall()
     
-    IdReceipt = getLastReceipt()
+    IdReceipt = getLastReceipt(idStore)
 
 
 
@@ -497,9 +485,9 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
         #NO ESTA FUNCIONANDO BIEN
         #LA CONDICION DE LA PREGUNTA ESTA MAL
         #NO AUMENTA EL SUBINDICE SI SE DECIDE NO COMPRAR
-        updateItemStock(itemIds[ind], stock - QuantItem[ind])
+        updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
 
-        totalPrice += getItemPrice(itemIds[ind])*QuantItem[ind]
+        totalPrice += getItemPrice(itemIds[ind], idStore)*QuantItem[ind]
 
         ind+=1
 
@@ -507,12 +495,12 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
     query = ""
     
     if totalPrice >= points:
-        modifyCustomerPoints(IdCustomer, 0)
+        modifyCustomerPoints(IdCustomer, 0, idStore)
         totalPrice -= points
     else:
         points -= totalPrice
         totalPrice = 0
-        modifyCustomerPoints(IdCustomer, points)
+        modifyCustomerPoints(IdCustomer, points, idStore)
 
     
     query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
@@ -538,3 +526,238 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer):
 
 
     return query
+
+def isAdmin(idEmployee):
+
+    query = "SELECT E.IdPerson FROM Employee E "
+    query += "INNER JOIN EmployeeJob EJ ON EJ.IdPerson = E.IdPerson "
+    query += "WHERE EJ.IdJob = 1 AND E.Status = 1;"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    data = connection.query(query)
+
+    connection.close()
+
+    try:
+        for line in data:
+
+            if line[0] == idEmployee:
+                return True
+
+    except:
+        return False
+
+    
+
+    return False
+
+def getAdminStore(idAdmin):
+
+    query = "SELECT S.IdStore FROM Store S "
+    query += "INNER JOIN EmployeeJob EJ ON EJ.IdStore = S.IdStore "
+    query += "WHERE EJ.IdPerson = " + str(idAdmin) + ";"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    data = connection.query(query)
+
+    connection.close()
+
+    idStore = data[0][0]
+
+    return idStore
+
+def getNonAdminsForStore(idStore, prevAdmin):
+
+    query = "SELECT E.* FROM Employee E "
+    query += "INNER JOIN EmployeeJob EJ ON EJ.IdPerson = E.IdPerson "
+    query += "WHERE EJ.IdJob != 1 AND EJ.IdStore = " + str(idStore) 
+    query += " AND E.IdPerson != " + str(prevAdmin) + "AND E.Status = 1;"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    data = connection.query(query)
+
+
+    connection.close()
+    
+    try:
+        nextAdmin = data[0][0]
+        return nextAdmin
+
+    except:
+        return -1
+
+def deactivateEmployee(idEmployee):
+
+    if isAdmin(idEmployee):
+
+        return deactivateAdmin(idEmployee)
+
+    else:
+
+        query = "UPDATE Employee SET Status = 0 WHERE IdPerson = " + str(idEmployee) + ";"
+
+        connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+        connection.query(query)
+
+def deactivateAdmin(idEmployee):
+
+    idStore = getAdminStore(idEmployee)
+
+    newAdmin = getNonAdminsForStore(idStore, idEmployee)
+
+    if newAdmin == -1:
+        deactivateStore(idStore)
+
+    else:
+        connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+        
+
+        query = "UPDATE Employee SET Status = 0 WHERE IdPerson = " +str(idEmployee) + ";"
+
+        connection.query(query)
+
+        query = "UPDATE Store SET IdAdmin = " + str(newAdmin) + " "
+
+        query += "WHERE IdStore = " + str(idStore) + ";"
+
+        connection.query(query)
+
+        query = "UPDATE EmployeeJob SET IdJob = 1 WHERE IdPerson = " + str(newAdmin) + ";"
+
+        connection.query(query)
+        
+        print(query)
+
+        connection.close()
+
+def deactivateStore(idStore):
+
+    query = "UPDATE Store SET Status = 0 WHERE IdStore = " + str(idStore) + ";"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    connection.query(query)
+
+    connection.close()
+
+    deactivateStoreEmployees(idStore)
+
+def deactivateStoreEmployees(idStore):
+
+    query = "UPDATE Employee SET Status = 0 FROM Employee E "
+    query += "INNER JOIN EmployeeJob EJ ON EJ.IdPerson = E.IdPerson WHERE EJ.IdStore = " + str(idStore) + ";"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    connection.query(query)
+
+    connection.close()
+
+def employeeOfTheMonth(idStore):
+
+    query = "SELECT IdEmployee, COUNT(IdEmployee) AS Sales FROM Receipt GROUP BY IdEmployee ORDER BY Sales DESC LIMIT 1;"
+
+
+
+    connection = mysql.connector.connect(host='localhost',
+                                         database= db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+    cursor = connection.cursor()
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    employeeId = 0
+
+    try:
+        employeeId = data[0][0]
+
+    except:
+
+        print("No employee")
+    
+    connection.close()
+
+    return getEmployeeData(employeeId, idStore)
+
+def getEmployeeData(idEmployee, idStore):
+
+    query = "SELECT * FROM Employee WHERE IdPerson = " + str(idEmployee) + ";"
+
+    connection = mysql.connector.connect(host='localhost',
+                                         database= db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+    cursor = connection.cursor()
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    return data[0][0]
+
+def generateStoreRequest(idStore):
+
+    items = getItemsWithCeroStock(idStore)
+
+    today = date.today()
+    requestDate = today.strftime("%Y-%m-%d")
+
+
+    query = "INSERT INTO StoreRequest (IdStore, RequestDate) VALUES "
+    query += str( (idStore, requestDate) ) + ";"
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+    connection.query(query)
+
+    data = connection.query("SELECT IdRequest FROM StoreRequest ORDER BY IdRequest DESC;")
+
+    try:
+
+        idRequest = data[0][0]
+
+    except:
+
+        idRequest = 1
+
+    query = "INSERT INTO StoreRequestItem VALUES "
+
+    for item in items:
+
+        connection.query(query + str((idRequest, item)))
+
+    connection.close()
