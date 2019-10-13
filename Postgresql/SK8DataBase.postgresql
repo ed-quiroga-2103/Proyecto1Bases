@@ -1,4 +1,5 @@
--- Entidades 
+-- Entidades______________________________________________________________________
+
 
 -- CREATE TABLE Country (
 --     IdCountry SERIAL PRIMARY KEY,
@@ -95,7 +96,7 @@
 --     InitialDateTime DATE NOT NULL,
 --     FinalDateTime DATE NOT NULL,
 --     Porcentage INTEGER NOT NULL,
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE,
 --     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 -- );
 
@@ -104,7 +105,7 @@
 --     IdStore INTEGER NOT NULL,
 --     RequestDate DATE NOT NULL,
 --     DeliveryDate DATE NOT NULL,
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE
 -- );
 
 -- CREATE TABLE Receipt (
@@ -114,10 +115,12 @@
 --     Price INTEGER NOT NULL,
 --     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
 --     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE
 -- );
 
--- Tablas Cruz
+
+-- Tablas Cruz_____________________________________________________________________
+
 
 -- CREATE TABLE ItemShipment (
 --     IdShipment INTEGER NOT NULL,
@@ -130,7 +133,7 @@
 --     IdStore INTEGER NOT NULL,
 --     IdItem INTEGER NOT NULL,
 --     Quantity INTEGER NOT NULL,
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE,
 --     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
 -- );
 
@@ -155,11 +158,12 @@
 --     HireDate DATE NOT NULL,
 --     FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
 --     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
---     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE
 -- );
  
 
--- FUNCIONES
+-- FUNCIONES_________________________________________________________________
+
 
 -- CREATE OR REPLACE FUNCTION getItemStore(id INTEGER) 
 --    RETURNS TABLE (
@@ -182,7 +186,6 @@
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
--- SELECT * FROM getItemStore(1);
 
 -- CREATE OR REPLACE FUNCTION getEmployeeStore(id INTEGER) 
 --    RETURNS TABLE (
@@ -206,8 +209,6 @@
 -- END; 
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
-
--- SELECT * FROM getEmployeeStore(1);
 
 
 -- CREATE OR REPLACE FUNCTION getPromoStore(id INTEGER) 
@@ -237,7 +238,10 @@
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
--- CRUD STORE **********************************************
+
+-- CRUD STORE______________________________________________________________________
+
+
 -- DROP FUNCTION InsertStore (Code INTEGER, IdAddress INTEGER, Status INTEGER, IdAdmin INTEGER) ;
 -- CREATE OR REPLACE FUNCTION InsertStore (code INTEGER, idaddress INTEGER, status INTEGER, idadmin INTEGER) 
 -- RETURNS VOID AS $$
@@ -248,8 +252,8 @@
 -- LANGUAGE PLPGSQL;
 
 -- SELECT InsertStore(1,1,1,612);
-
 -- SELECT * FROM STORE;
+
 
 -- CREATE OR REPLACE FUNCTION ConsultStore(id INTEGER) 
 --    RETURNS TABLE (
@@ -276,12 +280,6 @@
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
--- DROP FUNCTION ConsultStore(id INTEGER);
--- SELECT * FROM ConsultStore(4);
-
-
-
--- DROP FUNCTION DeleteStore(id INTEGER);
 
 -- CREATE OR REPLACE FUNCTION DeleteStore (id INTEGER) 
 -- RETURNS VOID AS $$
@@ -293,56 +291,139 @@
 -- LANGUAGE PLPGSQL;
 
 
-
--- DROP FUNCTION ConsultStore(id INTEGER);
--- SELECT DropStore(3);
--- SELECT * FROM Store;
-
-
--- CRUD Employee
-
--- CREATE OR REPLACE FUNCTION InsertEmployee (IdPerson INTEGER, Name VARCHAR,  MiddleName VARCHAR, LastName VARCHAR, IdentityDoc VARCHAR, IdAddress INTEGER,Status INTEGER) 
+-- CREATE OR REPLACE FUNCTION ModifyStore (id INTEGER, newcode INTEGER, newidaddress INTEGER, newstatus INTEGER, newidadmin INTEGER) 
 -- RETURNS VOID AS $$
 -- BEGIN
---     INSERT INTO Person VALUES (IdPerson, Name,  MiddleName , LastName , IdentityDoc , IdAddress);
---     INSERT INTO Employee VALUES (IdPerson , Status); 
+--     UPDATE
+--         Store
+--     SET
+--         Code = newcode,
+--         IdAddress = newidaddress,
+--         Status = newstatus,
+--         IdAdmin = newidadmin
+--     WHERE
+--         IdStore = id;
 -- END
 -- $$
 -- LANGUAGE PLPGSQL;
 
--- SELECT InsertEmployee(3,'Eduardo','Quiroga','Alfaro','1-1430-0632',1,1);
--- SELECT * FROM Person;
+
+-- CRUD Employee____________________________________________________________________
+
+
+-- CREATE OR REPLACE FUNCTION InsertEmployee (Name VARCHAR,  MiddleName VARCHAR, LastName VARCHAR, IdentityDoc VARCHAR, IdAddress INTEGER,Status INTEGER,IdJob INTEGER,IdStore INTEGER,HireDate Date) 
+-- RETURNS VOID AS $$
+-- DECLARE
+--    newIdPerson  INTEGER := (SELECT IdPerson FROM Person ORDER BY IdPerson DESC LIMIT 1)+1;
+-- BEGIN
+--     INSERT INTO Person VALUES (newIdPerson, Name,  MiddleName , LastName , IdentityDoc , IdAddress);
+--     INSERT INTO Employee VALUES (newIdPerson , Status); 
+--     INSERT INTO EmployeeJob Values (IdJob, newIdPerson, IdStore, HireDate);
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+
+-- CREATE OR REPLACE FUNCTION ModifyEmployeePerson (Id INTEGER, newName VARCHAR,  newMiddleName VARCHAR, newLastName VARCHAR, newIdentityDoc VARCHAR, newIdAddress INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     UPDATE
+--         Person
+--     SET
+--         Name = newName,
+--         MiddleName = newMiddleName,
+--         LastName = newLastName,
+--         IdentityDoc = newIdentityDoc,
+--         IdAddress = newIdAddress
+--     WHERE
+--         IdPerson = Id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+
+-- CREATE OR REPLACE FUNCTION ModifyEmployee (Id INTEGER,newStatus INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     UPDATE
+--         Employee
+--     SET
+--         Status = newStatus
+--     WHERE
+--         IdPerson = Id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+
+-- CREATE OR REPLACE FUNCTION ModifyEmployeeJob (Id INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     UPDATE
+--         EmployeeJob
+--     SET
+--         IdJob = newIdJob,
+--         IdStore = newIdStore,
+--         HireDate = newHireDate
+--     WHERE
+--         IdPerson = Id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+
+-- SELECT ModifyEmployeeJob(2001,3,3,'2019-08-08');
+-- SELECT * FROM EmployeeJob;
+-- DROP ModifyEmployeeJob (Id INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date);
+-- DROP FUNCTION ModifyEmployee (newId INTEGER, newName VARCHAR,  newMiddleName VARCHAR, newLastName VARCHAR, newIdentityDoc VARCHAR, newIdAddress INTEGER, newStatus INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date) ;
 
 
 -- CREATE OR REPLACE FUNCTION ConsultEmployee(id INTEGER) 
 --    RETURNS TABLE (
---      IdStore INTEGER,
---      Code INTEGER,
+--      IdPerson INTEGER,
+--      Name VARCHAR,
+--      MiddleName VARCHAR,
+--      LastName VARCHAR,
+--      IdentityDoc VARCHAR,
 --      IdAddress INTEGER,
 --      Status INTEGER,
---      IdAdmin INTEGER
+--      IdJob INTEGER,
+--      IdStore INTEGER,
+--      HireDate DATE,
+--      Job VARCHAR,
+--      Salary INTEGER
 --     ) 
 -- AS $Body$
 -- BEGIN
 --    RETURN QUERY 
 --         SELECT 
---             S.IdStore,
---             S.Code,
---             S.IdAddress,
---             S.Status,
---             S.IdAdmin
+--             P.IdPerson,
+--             P.Name,
+--             P.MiddleName,
+--             P.LastName,
+--             P.IdentityDoc,
+--             P.IdAddress,
+--             E.Status,
+--             EJ.IdJob,
+--             EJ.IdStore,
+--             EJ.HireDate,
+--             J.Job,
+--             J.Salary
 --         FROM
---             Store S
+--             Person P
+--         INNER JOIN Employee E ON E.IdPerson = P.IdPerson 
+--         INNER JOIN EmployeeJob EJ ON EJ.IdPerson = E.IdPerson
+--         INNER JOIN Job J ON EJ.IdJob = J.IdJob
 --         WHERE
---             S.IdStore = id;
+--             E.IdPerson = id;
 -- END; 
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
--- DROP FUNCTION ConsultStore(id INTEGER);
--- SELECT * FROM ConsultStore(1);
 
--- DROP ALL
+-- DROP ALL_______________________________________________________________________
+
+
 -- DROP TABLE Country CASCADE;
 -- DROP TABLE State CASCADE;
 -- DROP TABLE Address CASCADE;
@@ -362,10 +443,13 @@
 -- DROP TABLE Receipt CASCADE;
 -- DROP TABLE Shipment CASCADE;
 -- DROP TABLE Store CASCADE;
+-- DROP TABLE Category CASCADE;
 
--- Datos generados
 
--- Address
+-- Inserciones_____________________________________________________________________
+
+
+-- -- Address
 
 -- INSERT INTO Country VALUES
 -- (1, 'USA');
@@ -4213,7 +4297,7 @@
 -- (3,5,5),
 -- (3,6,5);
 
--- Customer 
+-- -- Customer 
 
 -- INSERT INTO Customer VALUES
 -- (1,1,0),
