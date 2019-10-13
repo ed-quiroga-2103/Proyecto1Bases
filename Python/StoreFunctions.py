@@ -100,7 +100,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
         subQuery = "INSERT INTO ItemReceipt (IdItem, IdReceipt, Quantity) VALUES  (%s,%s,%s);"
 
         data = (itemIds[ind], IdReceipt, QuantItem[ind])
-
+    
         cursor.execute(subQuery, data)
 
         ind+=1
@@ -413,6 +413,8 @@ def updateWarehouse(idStore):
     updateStock(idStore)
 
     sendPromos(idStore)
+
+    generateStoreRequest(idStore)
 
 def getCustomerPoints(IdCustomer, idStore):
 
@@ -761,3 +763,4 @@ def generateStoreRequest(idStore):
         connection.query(query + str((idRequest, item)))
 
     connection.close()
+
