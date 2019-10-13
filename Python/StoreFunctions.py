@@ -3,6 +3,7 @@ from mysql.connector import Error
 import pg
 
 from datetime import date
+from WarehouseFunctions import *
 
 db = "Test"
 
@@ -760,7 +761,7 @@ def generateStoreRequest(idStore):
 
     for item in items:
         
-        amount = getRestock(idStore, items)
+        amount = getRestock(idStore, item)
 
         connection.query(query + str((idRequest, item, amount)))
 
@@ -781,3 +782,8 @@ def getRestock(idStore, idItem):
     connection.close()
 
     return 5 - data[0][0]
+
+def openStore(idStore):
+    fragItemStore(idStore)
+    fragEmployeeStore(idStore)
+

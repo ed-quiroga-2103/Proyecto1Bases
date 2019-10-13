@@ -167,7 +167,6 @@ def InsertEmployee(Name,  MiddleName, LastName, IdentityDoc, IdAddress, Status, 
 
       connection.close()
 
-
 def InsertPromo(newIdStore, newIdItem , newInitialDateTime , newFinalDateTime , newPorcentage ):
       connection = pg.DB(dbname='sk8database', host='127.0.0.1', port = 5432, user='root', passwd='root')
       
@@ -179,7 +178,6 @@ def InsertPromo(newIdStore, newIdItem , newInitialDateTime , newFinalDateTime , 
       print( connection.query(str(final)))
 
       connection.close()
-
 
 def InsertStore(Code , IdAddress , Status , IdAdmin ):
       connection = pg.DB(dbname='sk8database', host='127.0.0.1', port = 5432, user='root', passwd='root')
@@ -228,7 +226,6 @@ def ModifyStore(newid , newcode , newidaddress , newstatus , newidadmin )  :
       print( connection.query(str(final)))
 
       connection.close()
-
 
 def fragItems(idStore):
       fragCategory(idStore)
@@ -679,7 +676,6 @@ def restockStores():
             print(query)
             connection.query(query)
 
-
 def getStoreFromRequest(idRequest):
 
       query = "SELECT IdStore FROM StoreRequest WHERE IdRequest = " + str(idRequest) + ";"
@@ -718,7 +714,6 @@ def fragEmployeeStore(idStore):
 
       cursor.close()
 
-
 def reportePuntos():
 
       connection = mysql.connector.connect(host='localhost',
@@ -732,8 +727,7 @@ def reportePuntos():
 
       cursor.close()
 
-
-def reportePuntos():
+def reporteCompras():
 
       connection = mysql.connector.connect(host='localhost',
                                          database=db + str(idStore),
@@ -746,7 +740,6 @@ def reportePuntos():
 
       cursor.close()
       
-
 def consultaGarantia(fecha):
 
       connection = mysql.connector.connect(host='localhost',
@@ -760,14 +753,12 @@ def consultaGarantia(fecha):
 
       data = cursor.fetchall()
 
-      if data = 0:
+      if data == 0:
             print("La garantia se vencio")
       else:
             print("La garantia sigue vigente")
 
       cursor.close()
-
-
 
 def consultaPromocion(fecha):
 
@@ -789,7 +780,6 @@ def consultaPromocion(fecha):
 
 
       cursor.close()
-
 
 def consultaPromocion(id):
 

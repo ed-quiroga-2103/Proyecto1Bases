@@ -199,7 +199,7 @@
 
 -- FUNCIONES_________________________________________________________________
 
-
+-- *
 -- CREATE OR REPLACE FUNCTION getItemStore(id INTEGER) 
 --    RETURNS TABLE (
 --      IdItem INTEGER,
@@ -221,7 +221,7 @@
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
-
+-- *
 -- CREATE OR REPLACE FUNCTION getEmployeeStore(id INTEGER) 
 --    RETURNS TABLE (
 --      IdJob INTEGER,
@@ -245,7 +245,7 @@
 -- $Body$ 
 -- LANGUAGE PLPGSQL;
 
-
+-- *
 -- CREATE OR REPLACE FUNCTION getPromoStore(id INTEGER) 
 --    RETURNS TABLE (
 --      IdPromo INTEGER,
@@ -309,16 +309,6 @@
 --             S.IdStore = id;
 -- END; 
 -- $Body$ 
--- LANGUAGE PLPGSQL;
-
-
--- CREATE OR REPLACE FUNCTION DeleteStore (id INTEGER) 
--- RETURNS VOID AS $$
--- BEGIN
---     DELETE FROM Store S
---     WHERE S.IdStore = id;
--- END
--- $$
 -- LANGUAGE PLPGSQL;
 
 
@@ -411,7 +401,7 @@
 -- SELECT * FROM EmployeeJob;
 -- DROP ModifyEmployeeJob (Id INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date);
 -- DROP FUNCTION ModifyEmployee (newId INTEGER, newName VARCHAR,  newMiddleName VARCHAR, newLastName VARCHAR, newIdentityDoc VARCHAR, newIdAddress INTEGER, newStatus INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date) ;
-
+-- ****************************************
 
 -- CREATE OR REPLACE FUNCTION ConsultEmployee(id INTEGER) 
 --    RETURNS TABLE (
@@ -453,16 +443,6 @@
 --             E.IdPerson = id;
 -- END; 
 -- $Body$ 
--- LANGUAGE PLPGSQL;
-
-
--- CREATE OR REPLACE FUNCTION DeleteEmployee (id INTEGER) 
--- RETURNS VOID AS $$
--- BEGIN
---     DELETE FROM Person P
---     WHERE P.IdPerson = id;
--- END
--- $$
 -- LANGUAGE PLPGSQL;
 
 

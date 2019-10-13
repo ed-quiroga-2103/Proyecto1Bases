@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 USE Test1;
 -- 
 -- CREATE TABLE IF NOT EXISTS Country (
@@ -274,13 +273,10 @@ USE Test1;
 -- DELIMITER ;
 
 
-	SELECT DATE(now()) INTO OUTFILE '/home/racso/Proyecto1Bases/MySQL/date.csv' 
-	FIELDS ENCLOSED BY '"' 
-	TERMINATED BY ';' 
-	ESCAPED BY '"' 
-	LINES TERMINATED BY '\r\n';
+	-- SELECT DATE(now()) INTO OUTFILE '/home/racso/Proyecto1Bases/MySQL/date.csv' 
+	-- FIELDS ENCLOSED BY '"' 
+	-- TERMINATED BY ';' 
+	-- ESCAPED BY '"' 
+	-- LINES TERMINATED BY '\r\n';
 
-=======
-CREATE TABLE IF NOT EXISTS Country (
->>>>>>> e1fd77a146131d753991acecba62ee9f59e5a644
 
