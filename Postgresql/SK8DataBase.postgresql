@@ -355,6 +355,7 @@
 -- $$
 -- LANGUAGE PLPGSQL;
 
+
 -- **************************************************
 -- CREATE OR REPLACE FUNCTION ModifyEmployeeJob (Id INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date) 
 -- RETURNS VOID AS $$
@@ -447,22 +448,11 @@
 -- $$
 -- LANGUAGE PLPGSQL;
 
+
 -- Cambiar estado de un Item________________________________________________________
 
 
--- CREATE OR REPLACE FUNCTION ModifyStatusItem (Id INTEGER,newStatus INTEGER)
--- RETURNS VOID AS $$
--- BEGIN
-
---     UPDATE
---         Item
---     SET
---         Status = newStatus
---     WHERE
---         IdItem = Id;
--- END
--- $$
--- LANGUAGE PLPGSQL;
+-- Quiroga la tiene **********************
 
 
 -- DROP ALL_______________________________________________________________________
