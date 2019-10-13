@@ -169,7 +169,7 @@ def generateEmployeeScript(num, IdList, IdStore):
 
 def generateJobEmployee(IdPerson, IdStore, hireDate, IdJob = -1):
     if IdJob == -1:
-        IdJob = random.choice(range(2,5))
+        IdJob = random.choice(range(2,4))
     return (IdJob+1, IdPerson, IdStore, hireDate)
 
 def generateJobEmployeeScript(IdList, IdAdmin, IdStore):
