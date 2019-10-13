@@ -41,13 +41,13 @@
 --     IdPerson INTEGER NOT NULL,
 --     Status INTEGER NOT NULL,
 --     Points INTEGER NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+--     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson) ON DELETE CASCADE
 -- );
 
 -- CREATE TABLE Employee (
 --     IdPerson INTEGER NOT NULL,
 --     Status INTEGER NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson)
+--     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson) ON DELETE CASCADE
 -- );
 
 -- CREATE TABLE Job (
@@ -63,7 +63,7 @@
 --     Status INTEGER NOT NULL,
 --     IdAdmin INTEGER NOT NULL,
 --     FOREIGN KEY (IdAddress) REFERENCES Address (IdAddress),
---     FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson)
+--     FOREIGN KEY (IdAdmin) REFERENCES Person (IdPerson) ON DELETE CASCADE
 -- );
 
 -- CREATE TABLE Category (
@@ -114,7 +114,7 @@
 --     IdStore INTEGER NOT NULL,
 --     Price INTEGER NOT NULL,
 --     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
+--     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson) ON DELETE CASCADE,
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE
 -- );
 
@@ -157,7 +157,7 @@
 --     IdStore INTEGER NOT NULL,
 --     HireDate DATE NOT NULL,
 --     FOREIGN KEY (IdJob) REFERENCES Job (IdJob),
---     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
+--     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson) ON DELETE CASCADE,
 --     FOREIGN KEY (IdStore) REFERENCES Store (IdStore) ON DELETE CASCADE
 -- );
  
@@ -355,10 +355,14 @@
 -- $$
 -- LANGUAGE PLPGSQL;
 
-
+-- **************************************************
 -- CREATE OR REPLACE FUNCTION ModifyEmployeeJob (Id INTEGER,newIdJob INTEGER,newIdStore INTEGER,newHireDate Date) 
 -- RETURNS VOID AS $$
 -- BEGIN
+
+--     ALTER TABLE EmployeeJob
+--         DROP FOREIGN KEY 
+    
 --     UPDATE
 --         EmployeeJob
 --     SET
@@ -370,7 +374,6 @@
 -- END
 -- $$
 -- LANGUAGE PLPGSQL;
-
 
 -- SELECT ModifyEmployeeJob(2001,3,3,'2019-08-08');
 -- SELECT * FROM EmployeeJob;
@@ -418,6 +421,47 @@
 --             E.IdPerson = id;
 -- END; 
 -- $Body$ 
+-- LANGUAGE PLPGSQL;
+
+
+-- CREATE OR REPLACE FUNCTION DeleteEmployee (id INTEGER) 
+-- RETURNS VOID AS $$
+-- BEGIN
+--     DELETE FROM Person P
+--     WHERE P.IdPerson = id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+
+-- Generar Promociones______________________________________________________________
+
+
+-- CREATE OR REPLACE FUNCTION InsertPromo (newIdStore INTEGER, newIdItem INTEGER, newInitialDateTime DATE, newFinalDateTime DATE, newPorcentage INTEGER) 
+-- RETURNS VOID AS $$
+-- DECLARE
+--    newIdPromo  INTEGER := (SELECT IdPromo FROM Promo ORDER BY IdPromo DESC LIMIT 1)+1;
+-- BEGIN
+--     INSERT INTO Promo VALUES (newIdPromo,newIdStore, newIdItem, newInitialDateTime, newFinalDateTime , newPorcentage);
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
+
+-- Cambiar estado de un Item________________________________________________________
+
+
+-- CREATE OR REPLACE FUNCTION ModifyStatusItem (Id INTEGER,newStatus INTEGER)
+-- RETURNS VOID AS $$
+-- BEGIN
+
+--     UPDATE
+--         Item
+--     SET
+--         Status = newStatus
+--     WHERE
+--         IdItem = Id;
+-- END
+-- $$
 -- LANGUAGE PLPGSQL;
 
 
