@@ -127,13 +127,31 @@ CREATE TABLE StoreRequest (
 
 );
 
+CREATE TABLE WarehouseRequest(
+
+    IdRequest SERIAL PRIMARY KEY,
+    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+
+);
+
 -- Tablas Cruz
 
 CREATE TABLE StoreRequestItem (
 
     IdRequest INTEGER NOT NULL,
     IdItem INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
     Status INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+);
+
+CREATE TABLE WarehouseRequest(
+
+    IdRequest INTEGER NOT NULL,
+    IdItem INTEGER NOT NULL,
 
     FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
