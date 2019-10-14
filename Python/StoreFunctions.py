@@ -759,8 +759,25 @@ def generateStoreRequest(idStore):
     query = "INSERT INTO StoreRequestItem VALUES "
 
     for item in items:
+        
+        amount = getRestock(idStore, items)
 
-        connection.query(query + str((idRequest, item)))
+        connection.query(query + str((idRequest, item, amount)))
 
     connection.close()
 
+def getRestock(idStore, idItem):
+
+    connection = mysql.connector.connect(host='localhost',
+                                         database= db + str(idStore),
+                                         user='root',
+                                         password='root')
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT Quantity FROM ItemStore WHERE IdItem = " + str(idItem) + ";")
+
+    data = cursor.fetchall()
+
+    connection.close()
+
+    return 5 - data[0][0]

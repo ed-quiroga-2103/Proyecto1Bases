@@ -1753,7 +1753,6 @@ INSERT INTO Item VALUES
 (249, 249, 25, 'Amazing Board', 8, 60, 1, '2019-10-09'),
 (250, 250, 25, 'Fire Trucks', 5, 40, 1, '2019-10-09');
 
-USE Test1;
 INSERT INTO Job VALUES
 (1, 'Admin', 80000),
 (2, 'Cashier', 30000),

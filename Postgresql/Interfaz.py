@@ -66,7 +66,6 @@ def fragItemStore(idStore):
                   cursor.execute("INSERT INTO ItemStore VALUES (%s,%s);", newItem)
                   connection.commit()
             
-
 def getEmployeeStore(IdStore):
       connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
       
@@ -130,7 +129,6 @@ def fragEmployeeStore(idStore):
                   cursor.execute("INSERT INTO EmployeeJob VALUES (%s,%s,%s);", newEmployee)
                   connection.commit()
             
-
 def getPromoStore(IdStore):
       connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
       
@@ -232,6 +230,39 @@ def ModifyStore(newid , newcode , newidaddress , newstatus , newidadmin )  :
       connection.close()
 
 
+def fragItems(idStore):
+      fragCategory(idStore)
+      fragBrand(idStore)
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Item;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+      cursor = connection.cursor()
+
+      for line in data:
+            query = "INSERT INTO Item VALUES "
+            
+           
+            query += str( line ) + ";"
+            
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
 def fragPerson(idStore):
 
       connection = pg.DB(host='localhost',
@@ -262,9 +293,417 @@ def fragPerson(idStore):
             
             cursor.execute(query)
 
+      connection.commit()
+
+      connection.close()
+
+def fragJob(idStore):
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Job;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                    database=db + str(idStore),
+                                    user='root',
+                                    password='root')
+      cursor = connection.cursor()
+      
+      for line in data:
+
+            query  = "INSERT INTO Job (IdJob, Job, Salary) VALUES "
+            query += str( (line[0], line[1], line[2]) ) + ";"
+
+            cursor.execute(query)
+
             connection.commit()
       connection.close()
 
+def fragCountry(idStore):
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Country;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                    database=db + str(idStore),
+                                    user='root',
+                                    password='root')
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO Country (IdCountry, Name) VALUES "
+            query += str( (line[0], line[1]) ) + ";"
+
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def fragState(idStore):
+
+      connection = pg.DB(host='localhost',
+                  user='root',
+                  passwd='root',
+                  dbname='testpsql')
+
+      data = connection.query("SELECT * FROM State;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                              database=db + str(idStore),
+                              user='root',
+                              password='root')
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO State (IdState, IdCountry, Name) VALUES "
+            query += str( line ) + ";"
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def fragCity(idStore):
+
+      connection = pg.DB(host='localhost',
+                  user='root',
+                  passwd='root',
+                  dbname='testpsql')
+
+      data = connection.query("SELECT * FROM City;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                              database=db + str(idStore),
+                              user='root',
+                              password='root')
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO City VALUES "
+            query += str( line ) + ";"
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def fragAddress(idStore):
+
+      fragCountry(idStore)
+      fragState(idStore)
+      fragCity(idStore)
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Address;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                    database=db + str(idStore),
+                                    user='root',
+                                    password='root')
+
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO Address VALUES "
+            query += str( line ) + ";"
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def fragCategory(idStore):
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Category;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                    database=db + str(idStore),
+                                    user='root',
+                                    password='root')
+
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO Category VALUES "
+            query += str( line ) + ";"
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def fragBrand(idStore):
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query("SELECT * FROM Brand;")
+
+      connection.close()
+
+      connection = mysql.connector.connect(host='localhost',
+                                    database=db + str(idStore),
+                                    user='root',
+                                    password='root')
+
+      cursor = connection.cursor()
+
+      for line in data:
+
+            query  = "INSERT INTO Brand VALUES "
+            query += str( line ) + ";"
+            
+            cursor.execute(query)
+
+      connection.commit()
+
+      connection.close()
+
+def initStore(idStore):
+
+      connection = mysql.connector.connect(host='localhost',
+                                    user='root',
+                                    password='root')
+
+      cursor = connection.cursor()
+
+      cursor.execute("CREATE DATABASE Test"+str(idStore)+";")
+
+      file = open("MySQL/StoreScript.sql")
+
+      query = "USE Test"+str(idStore) + ";\n" + "\n".join(file.readlines())
+
+      file.close()
+
+      cursor.execute(query)
+
+      connection.close()
+
+
+
+      fragAddress(idStore)
+      fragBrand(idStore)
+      fragCategory(idStore)
+      fragItems(idStore)
+      fragPerson(idStore)
+      fragJob(idStore)
+
+      return 1
+
+def getItemsWarehouse():
+
+      connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+      data = connection.query("SELECT IdItem FROM ItemWarehouse WHERE Quantity = 0;")
+
+      ids = []
+
+      connection.close()
+
+      for line in data:
+            ids.append(line[0])
+
+      return ids
+
+def generateWarehouseRequest():
+
+      connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+      data = getItemsWarehouse()
+
+
+      idRequest = connection.query("SELECT IdRequest FROM WarehouseRequest ORDER BY IdRequest DESC;")
+
+      try:
+
+        idRequest = idRequest[0][0] + 1 
+
+      except:
+
+        idRequest = 1
+
+      today = date.today()
+      requestDate = today.strftime("%Y-%m-%d")
+
+
+      connection.query("INSERT INTO WarehouseRequest VALUES " + str( (idRequest, requestDate) ) + ";")
+
+
+      for i in data:
+
+            query = "INSERT INTO WarehouseRequestItem VALUES "
+
+            query += str( (idRequest, i, 1) ) + ";"
+
+            connection.query(query)
+
+      connection.close()
+
+      restockWarehouse(data)
+
+def restockWarehouse(idList):
+      connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+
+
+      for i in idList:
+
+            query = "UPDATE ItemWarehouse SET Quantity = 25 WHERE IdItem = " + str(i) + ";"
+
+            connection.query(query)
+
+      connection.close()
+            
+def getStockFromWarehouse(idItem):
+
+    connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+
+    data = connection.query("SELECT Quantity FROM ItemWarehouse WHERE IdItem = " + str(idItem) + ";")
+
+    connection.close()
+
+    return data[0][0]
+
+def getItemsForRestock():
+
+      query = "SELECT IdRequest, IdItem, Quantity FROM StoreRequestItem ORDER BY IdRequest;"
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      return connection.query(query)
+
+def updateWarehouseStock(idItem, newStock):
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      query = "UPDATE ItemWarehouse SET Quantity = " + str(newStock)
+      query += "WHERE IdItem = " + str(idItem) + ";" 
+
+      connection.query(query)
+
+      connection.close()
+
+def restockStores():
+
+      items = getItemsForRestock()
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      for item in items:
+
+            idStore = getStoreFromRequest(item[0])
+            
+            stock = getStockFromWarehouse(item[1])
+
+            needed = item[2]
+
+            newValue = 0
+
+            if stock > needed:
+                  newValue = needed + getItemStock(item[1], idStore)
+                  stock -= needed
+
+                  updateWarehouseStock(item[1], stock)
+                  query = "UPDATE StoreRequestItem SET Status = 1 WHERE IdItem = " + str(item[1]) 
+                  query += " AND IdRequest = " + str(item[0]) + ";" 
+                  connection.query(query)
+
+            else:
+                  newValue = stock + getItemStock(item[1], idStore)
+                  updateWarehouseStock(item[1], 0)
+
+                  needed -= stock
+
+                  query = "UPDATE StoreRequestItem SET Quantity = " + str(needed)
+                  query += " WHERE IdItem = " + str(item[1]) + " AND IdRequest = " + str(item[0]) + ";"
+
+                  connection.query(query)
+
+            query = "UPDATE ItemStore SET Quantity = " + str(newValue)
+
+            query += " WHERE IdStore = " + str(idStore)
+            query += " AND IdItem = " + str(item[1]) + ";"
+            print(query)
+            connection.query(query)
+
+
+def getStoreFromRequest(idRequest):
+
+      query = "SELECT IdStore FROM StoreRequest WHERE IdRequest = " + str(idRequest) + ";"
+      
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query(query)
+
+      return data[0][0]
+
+def getItemStock(idItem, idStore):
+
+      query = "SELECT Quantity FROM ItemStore WHERE IdStore = " + str(idStore) + " "
+      query += "AND IdItem = " + str(idItem) + ";"
+
+      connection = pg.DB(host='localhost',
+                        user='root',
+                        passwd='root',
+                        dbname='testpsql')
+
+      data = connection.query(query)
 
 def fragEmployeeStore(idStore):
       
@@ -308,64 +747,64 @@ def reportePuntos():
       cursor.close()
       
 
-def consultaGarantia(fecha)
+def consultaGarantia(fecha):
 
       connection = mysql.connector.connect(host='localhost',
                                           database=db + str(idStore),
                                           user='root',
                                           password='root')
 
-            cursor = connection.cursor()
+      cursor = connection.cursor()
 
-            cursor.execute("SELECT GarantiaProducto("+str(fecha)+");")
+      cursor.execute("SELECT GarantiaProducto("+str(fecha)+");")
 
-            data = cursor.fetchall()
+      data = cursor.fetchall()
 
-            if data = 0:
-                  print("La garantia se vencio")
-            else:
-                  print("La garantia sigue vigente")
+      if data = 0:
+            print("La garantia se vencio")
+      else:
+            print("La garantia sigue vigente")
 
-            cursor.close()
-
-
-
-def consultaPromocion(fecha)
-
-      connection = mysql.connector.connect(host='localhost',
-                                          database=db + str(idStore),
-                                          user='root',
-                                          password='root')
-
-            cursor = connection.cursor()
-
-            cursor.execute("SELECT PromocionFechaHora("+str(fecha)+");")
-            
-            data = cursor.fetchall()
-
-            if data = 0:
-                  print("La promocion se vencio")
-            else:
-                  print("La promocion sigue vigente")
+      cursor.close()
 
 
-            cursor.close()
 
-
-def consultaPromocion(id)
+def consultaPromocion(fecha):
 
       connection = mysql.connector.connect(host='localhost',
                                           database=db + str(idStore),
                                           user='root',
                                           password='root')
 
-            cursor = connection.cursor()
+      cursor = connection.cursor()
 
-            cursor.execute("SELECT PromocionFechaHora("+str(id)+");")
+      cursor.execute("SELECT PromocionFechaHora("+str(fecha)+");")
+      
+      data = cursor.fetchall()
 
-            data = cursor.fetchall()
-            
-            print(data)
+      if data = 0:
+            print("La promocion se vencio")
+      else:
+            print("La promocion sigue vigente")
 
-            cursor.close()
-     
+
+      cursor.close()
+
+
+def consultaPromocion(id):
+
+      connection = mysql.connector.connect(host='localhost',
+                                          database=db + str(idStore),
+                                          user='root',
+                                          password='root')
+
+      cursor = connection.cursor()
+
+      cursor.execute("SELECT PromocionFechaHora("+str(id)+");")
+
+      data = cursor.fetchall()
+      
+      print(data)
+
+      cursor.close()
+
