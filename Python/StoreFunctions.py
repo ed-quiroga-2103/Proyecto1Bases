@@ -714,7 +714,7 @@ def employeeOfTheMonth(idStore):
 
 def getEmployeeData(idEmployee, idStore):
 
-    query = "SELECT * FROM Employee WHERE IdPerson = " + str(idEmployee) + ";"
+    query = "SELECT * FROM Person WHERE IdPerson = " + str(idEmployee) + ";"
 
     connection = mysql.connector.connect(host='localhost',
                                          database= db + str(idStore),
@@ -726,9 +726,10 @@ def getEmployeeData(idEmployee, idStore):
     cursor.execute(query)
 
     data = cursor.fetchall()
-
-    return data[0][0]
-
+    try:
+        return data[0]
+    except:
+        return "There are no sales registered"
 def generateStoreRequest(idStore):
 
     items = getItemsWithCeroStock(idStore)
