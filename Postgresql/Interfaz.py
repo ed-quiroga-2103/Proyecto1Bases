@@ -263,6 +263,109 @@ def fragPerson(idStore):
             cursor.execute(query)
 
             connection.commit()
-
       connection.close()
 
+
+def fragEmployeeStore(idStore):
+      
+      connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+      cursor = connection.cursor()
+
+      cursor.execute("SELECT IdPerson FROM Employee;")
+
+      cursor.close()
+
+
+def reportePuntos():
+
+      connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+      cursor = connection.cursor()
+
+      cursor.execute("CALL ReportePuntos();")
+
+      cursor.close()
+
+
+def reportePuntos():
+
+      connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+      cursor = connection.cursor()
+
+      cursor.execute("CALL ReporteCompras();")
+
+      cursor.close()
+      
+
+def consultaGarantia(fecha)
+
+      connection = mysql.connector.connect(host='localhost',
+                                          database=db + str(idStore),
+                                          user='root',
+                                          password='root')
+
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT GarantiaProducto("+str(fecha)+");")
+
+            data = cursor.fetchall()
+
+            if data = 0:
+                  print("La garantia se vencio")
+            else:
+                  print("La garantia sigue vigente")
+
+            cursor.close()
+
+
+
+def consultaPromocion(fecha)
+
+      connection = mysql.connector.connect(host='localhost',
+                                          database=db + str(idStore),
+                                          user='root',
+                                          password='root')
+
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT PromocionFechaHora("+str(fecha)+");")
+            
+            data = cursor.fetchall()
+
+            if data = 0:
+                  print("La promocion se vencio")
+            else:
+                  print("La promocion sigue vigente")
+
+
+            cursor.close()
+
+
+def consultaPromocion(id)
+
+      connection = mysql.connector.connect(host='localhost',
+                                          database=db + str(idStore),
+                                          user='root',
+                                          password='root')
+
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT PromocionFechaHora("+str(id)+");")
+
+            data = cursor.fetchall()
+            
+            print(data)
+
+            cursor.close()
+     

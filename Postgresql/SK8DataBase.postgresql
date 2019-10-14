@@ -119,7 +119,42 @@
 -- );
 
 
+-- CREATE TABLE StoreRequest (
+
+--     IdRequest SERIAL PRIMARY KEY,
+--     IdStore INTEGER NOT NULL,
+--     RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+
+--     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
+
+-- );
+
+
 -- Tablas Cruz_____________________________________________________________________
+
+
+-- CREATE TABLE StoreRequestItem (
+
+--     IdRequest INTEGER NOT NULL,
+--     IdItem INTEGER NOT NULL,
+--     Quantity INTEGER NOT NULL,
+--     Status INTEGER NOT NULL DEFAULT 0,
+
+--     FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+--     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+-- );
+
+
+-- CREATE TABLE WarehouseRequest(
+
+--     IdRequest INTEGER NOT NULL,
+--     IdItem INTEGER NOT NULL,
+
+--     FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
+--     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
+
+-- );
 
 
 -- CREATE TABLE ItemShipment (
@@ -242,7 +277,6 @@
 -- CRUD STORE______________________________________________________________________
 
 
--- DROP FUNCTION InsertStore (Code INTEGER, IdAddress INTEGER, Status INTEGER, IdAdmin INTEGER) ;
 -- CREATE OR REPLACE FUNCTION InsertStore (code INTEGER, idaddress INTEGER, status INTEGER, idadmin INTEGER) 
 -- RETURNS VOID AS $$
 -- BEGIN
@@ -250,9 +284,6 @@
 -- END
 -- $$
 -- LANGUAGE PLPGSQL;
-
--- SELECT InsertStore(1,1,1,612);
--- SELECT * FROM STORE;
 
 
 -- CREATE OR REPLACE FUNCTION ConsultStore(id INTEGER) 
@@ -452,7 +483,19 @@
 -- Cambiar estado de un Item________________________________________________________
 
 
--- Quiroga la tiene **********************
+-- CREATE OR REPLACE FUNCTION ModifyStatusItem (Id INTEGER,newStatus INTEGER)
+-- RETURNS VOID AS $$
+-- BEGIN
+
+--     UPDATE
+--         Item
+--     SET
+--         Status = newStatus
+--     WHERE
+--         IdItem = Id;
+-- END
+-- $$
+-- LANGUAGE PLPGSQL;
 
 
 -- DROP ALL_______________________________________________________________________
@@ -478,6 +521,9 @@
 -- DROP TABLE Shipment CASCADE;
 -- DROP TABLE Store CASCADE;
 -- DROP TABLE Category CASCADE;
+-- DROP TABLE StoreRequest CASCADE;
+-- DROP TABLE StoreRequestItem CASCADE;
+-- DROP TABLE WarehouseRequest CASCADE;
 
 
 -- Inserciones_____________________________________________________________________
