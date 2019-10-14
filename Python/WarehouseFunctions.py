@@ -634,6 +634,7 @@ def ConsultStore(IdStore):
 
       connection.close()
 
+#Se debe insertar la tienda manualmente
 def InsertEmployee(Name,  MiddleName, LastName, IdentityDoc, IdAddress, Status, IdJob, IdStore, HireDate):
       connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
       
@@ -644,6 +645,9 @@ def InsertEmployee(Name,  MiddleName, LastName, IdentityDoc, IdAddress, Status, 
       print( connection.query(str(final)))
 
       connection.close()
+      connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+      data = connection.query("SELECT IdPerson FROM Person ORDER BY IdPerson DESC LIMIT 1;")
 
       connection = mysql.connector.connect(host='localhost',
                                           database= db + str(IdStore),
@@ -651,11 +655,10 @@ def InsertEmployee(Name,  MiddleName, LastName, IdentityDoc, IdAddress, Status, 
                                           password='root')
       cursor = connection.cursor()
 
-      cursor.execute("SELECT IdPerson FROM Person ORDER BY IdPerson DESC LIMIT 1;")
-      data = cursor.fetchall()
+      
 
       query = "INSERT INTO Person VALUES "
-      query += str((data[0][0] +1, Name, MiddleName, LastName, IdentityDoc, IdAddress)) + ";"
+      query += str((data[0][0], Name, MiddleName, LastName, IdentityDoc, IdAddress)) + ";"
 
       print(query)
 
@@ -723,3 +726,10 @@ def ModifyStore(newid , newcode , newidaddress , newstatus , newidadmin )  :
       print( connection.query(str(final)))
 
       connection.close()
+
+def ModifyItemStatus(id, status):
+      connection = pg.DB(dbname='testpsql', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+      query = "SELECT * FROM ModifyStatusItem(" + str(id) + "," + str(status) + ");"
+
+      connection.query(query)

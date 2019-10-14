@@ -70,9 +70,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
         elif stock == 0:
             input("This item is not in stock")
             continue
-        #NO ESTA FUNCIONANDO BIEN
-        #LA CONDICION DE LA PREGUNTA ESTA MAL
-        #NO AUMENTA EL SUBINDICE SI SE DECIDE NO COMPRAR
+        
         updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
 
         totalPrice += getItemPrice(itemIds[ind], idStore)*QuantItem[ind]
@@ -730,6 +728,7 @@ def getEmployeeData(idEmployee, idStore):
         return data[0]
     except:
         return "There are no sales registered"
+
 def generateStoreRequest(idStore):
 
     items = getItemsWithCeroStock(idStore)
@@ -788,3 +787,117 @@ def openStore(idStore):
     fragItemStore(idStore)
     fragEmployeeStore(idStore)
 
+def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo):
+    totalPrice = 0
+    ind = 0
+
+    today = date.today()
+    sellingDate = today.strftime("%Y-%m-%d")
+
+    promo = getPromoItemAndDiscount(idPromo, idStore)
+
+    if promo == -1:
+        print("The promo does not exist")
+        return
+    
+
+    connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT LAST_INSERT_ID() FROM Receipt;")
+    records = cursor.fetchall()
+    
+    IdReceipt = getLastReceipt(idStore)
+
+
+
+    while(ind != len(itemIds)):
+
+        cursor.execute("SELECT Quantity FROM ItemStore WHERE IdItem = "+ str(itemIds[ind]))
+
+        records = cursor.fetchall()
+
+        stock = records[0][0]
+
+        if QuantItem[ind] > stock:
+            if input("There are only "+str(stock)+" items with the ID: "+str(itemIds[ind])+".\nWould you like to buy that number of items?") == "y":
+                QuantItem[ind] = stock
+            else:
+                ind+=1
+                continue
+        elif stock == 0:
+            input("This item is not in stock")
+            continue
+        
+        updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
+
+        totalPrice += getItemPrice(itemIds[ind], idStore)*QuantItem[ind]
+
+        if itemIds[ind] == promo[0]:
+            totalPrice -= getItemPrice(itemIds[ind], idStore)*QuantItem[ind] * (promo[1]/100)
+
+        ind+=1
+
+    queryData = ()
+    query = ""
+    
+    totalPrice = int(totalPrice)
+    
+    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
+
+    updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
+
+
+    cursor.execute(query, queryData)
+
+    connection.commit()
+
+
+    ind = 0 
+
+    while(ind != len(itemIds)):
+        subQuery = "INSERT INTO ItemReceipt (IdItem, IdReceipt, Quantity) VALUES  (%s,%s,%s);"
+
+        data = (itemIds[ind], IdReceipt, QuantItem[ind])
+    
+        cursor.execute(subQuery, data)
+
+        ind+=1
+
+    connection.commit()
+
+
+    return query
+
+
+def getPromoItemAndDiscount(idPromo, idStore):
+
+    connection = mysql.connector.connect(host='localhost',
+                                         database=db + str(idStore),
+                                         user='root',
+                                         password='root')
+
+    cursor = connection.cursor()
+
+
+    query = "SELECT IdItem, Percentage FROM Promo WHERE IdPromo = "
+    query += str(idPromo) + ";"
+
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    connection.close()
+
+    try:
+        return data[0]
+
+    except:
+        
+        return -1
