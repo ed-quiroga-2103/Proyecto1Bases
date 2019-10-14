@@ -130,7 +130,7 @@ CREATE TABLE StoreRequest (
 CREATE TABLE WarehouseRequest(
 
     IdRequest SERIAL PRIMARY KEY,
-    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    RequestDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
 
 );
 
@@ -152,6 +152,7 @@ CREATE TABLE WarehouseRequest(
 
     IdRequest INTEGER NOT NULL,
     IdItem INTEGER NOT NULL,
+    Status INTEGER NOT NULL,
 
     FOREIGN KEY (IdRequest) REFERENCES StoreRequest (IdRequest),
     FOREIGN KEY (IdItem) REFERENCES Item (IdItem)
