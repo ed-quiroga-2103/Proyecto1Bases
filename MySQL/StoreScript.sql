@@ -282,7 +282,7 @@ CREATE PROCEDURE PromocionId (Id INTEGER)
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE ReporteCompras ()
+CREATE PROCEDURE SalesReport ()
 BEGIN
 	SELECT IR.IdReceipt, I.IdItem, B.Name, I.Price, IR.Quantity
 	FROM Item I
@@ -294,7 +294,7 @@ DELIMITER //
 
 
 DELIMITER // 
-CREATE PROCEDURE ReportePuntos()
+CREATE PROCEDURE PointsReport()
 	BEGIN
 		SELECT P.IdPerson, P.FirstName, P.MiddleName, P.LastName, P.IdentityDoc, C.Points 
 		FROM Person P

@@ -533,7 +533,7 @@ CREATE OR REPLACE FUNCTION ConsultSales(id INTEGER)
    RETURNS TABLE (
      IdReceipt INTEGER,
      IdItem INTEGER,
-     SellingDate Date,
+     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
      Quantiy INTEGER
     ) 
 AS $Body$

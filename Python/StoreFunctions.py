@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 import pg
+import csv
 
 from datetime import date
 from WarehouseFunctions import *
@@ -31,7 +32,7 @@ def getLastReceipt(idStore):
 
     return id
 
-def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
+def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore, IdPayment):
     totalPrice = 0
     ind = 0
 
@@ -62,13 +63,13 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
         stock = records[0][0]
 
         if QuantItem[ind] > stock:
-            if input("There are only "+str(stock)+" items with the ID: "+str(itemIds[ind])+".\nWould you like to buy that number of items?") == "y":
+            if input("Solamente hay "+str(stock)+" articulos con el ID: "+str(itemIds[ind])+".\nDesea comprarlos todos?") == "y":
                 QuantItem[ind] = stock
             else:
                 ind+=1
                 continue
         elif stock == 0:
-            input("This item is not in stock")
+            print("El articulo con el ID: " + str(itemIds[ind]) + " no se encuentra en existencia")
             continue
         
         updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
@@ -83,7 +84,7 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
 
     
     query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, IdPayment)
 
     updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
 
@@ -439,14 +440,14 @@ def getCustomerPoints(IdCustomer, idStore):
 
     return points
 
-def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
+def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore, IdPayment):
     totalPrice = 0
     ind = 0
 
     points = getCustomerPoints(IdCustomer, idStore)
 
     if points == -1:
-        print("The customer is not registered")
+        print("El cliente no esta registrado")
 
         return
 
@@ -477,17 +478,15 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
         stock = records[0][0]
 
         if QuantItem[ind] > stock:
-            if input("There are only "+str(stock)+" items with the ID: "+str(itemIds[ind])+".\nWould you like to buy that number of items?") == "y":
+            if input("Solamente hay "+str(stock)+" articulos con el ID: "+str(itemIds[ind])+".\nDesea comprarlos todos?") == "y":
                 QuantItem[ind] = stock
             else:
                 ind+=1
                 continue
         elif stock == 0:
-            input("This item is not in stock")
+            print("El articulo con el ID: " + str(itemIds[ind]) + " no se encuentra en existencia")
             continue
-        #NO ESTA FUNCIONANDO BIEN
-        #LA CONDICION DE LA PREGUNTA ESTA MAL
-        #NO AUMENTA EL SUBINDICE SI SE DECIDE NO COMPRAR
+        
         updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
 
         totalPrice += getItemPrice(itemIds[ind], idStore)*QuantItem[ind]
@@ -507,7 +506,7 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
 
 
     query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, IdPayment)
 
     cursor.execute(query, queryData)
 
@@ -789,7 +788,7 @@ def openStore(idStore):
     fragItemStore(idStore)
     fragEmployeeStore(idStore)
 
-def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo, idPayment):
+def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo, IdPayment):
     totalPrice = 0
     ind = 0
 
@@ -826,13 +825,13 @@ def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo, idP
         stock = records[0][0]
 
         if QuantItem[ind] > stock:
-            if input("There are only "+str(stock)+" items with the ID: "+str(itemIds[ind])+".\nWould you like to buy that number of items?") == "y":
+            if input("Solamente hay "+str(stock)+" articulos con el ID: "+str(itemIds[ind])+".\nDesea comprarlos todos?") == "y":
                 QuantItem[ind] = stock
             else:
                 ind+=1
                 continue
         elif stock == 0:
-            input("This item is not in stock")
+            print("El articulo con el ID: " + str(itemIds[ind]) + " no se encuentra en existencia")
             continue
         
         updateItemStock(itemIds[ind], stock - QuantItem[ind], idStore)
@@ -851,7 +850,7 @@ def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo, idP
     
 
     query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, IdPayment)
 
     updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
 
@@ -904,9 +903,7 @@ def getPromoItemAndDiscount(idPromo, idStore):
         
         return -1
 
-
-
-def GenerateShoppingReport(idStore):
+def generateSalesReport(idStore):
 
     connection = mysql.connector.connect(host='localhost',
                                         database=db + str(idStore),
@@ -915,7 +912,7 @@ def GenerateShoppingReport(idStore):
 
     cursor = connection.cursor()
 
-    query = "CALL ReporteCompras();"
+    query = "CALL SalesReport();"
     
     try:
     
@@ -938,13 +935,13 @@ def GenerateShoppingReport(idStore):
         print("No se logro escribir el archivo...")
     return
 
-def GeneratePointsReport(idStore):
+def generatePointsReport(idStore):
     connection = mysql.connector.connect(host='localhost',
                                         database=db + str(idStore),
                                         user='root',
                                         password='root')
     cursor = connection.cursor()
-    query = "CALL ReportePuntos();"
+    query = "CALL PointsReport();"
     try:
         cursor.execute(query)
         data = cursor.fetchall()
@@ -958,7 +955,7 @@ def GeneratePointsReport(idStore):
         print("No se logro escribir el archivo...")
     return
 
-def ConsultSales(idemployee):
+def consultSales(idemployee):
     connection = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
 
     query = "SELECT ConsultSales( " + str(idemployee) + ");" 

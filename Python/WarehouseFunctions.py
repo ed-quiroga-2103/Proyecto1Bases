@@ -31,7 +31,6 @@ def getAllCustomers():
       data = connection.query("SELECT * FROM Customer;")
       return data
 
-
 def fragCustomers(idStore):
 
       connection = mysql.connector.connect(host='localhost',
@@ -52,7 +51,6 @@ def fragCustomers(idStore):
       connection.commit()
 
       connection.close()
-
 
 def fragItemStore(idStore):
 
@@ -463,6 +461,7 @@ def initStore(idStore):
       fragJob(idStore)
       fragEmployeeStore(idStore)
       fragItemStore(idStore)
+      fragCustomers(idStore)
 
       return 1
 
@@ -618,7 +617,6 @@ def restockStores():
             query += " AND IdItem = " + str(item[1]) + ";"
             connection.query(query)
 
-
 def getStoreFromRequest(idRequest):
 
       query = "SELECT IdStore FROM StoreRequest WHERE IdRequest = " + str(idRequest) + ";"
@@ -768,11 +766,9 @@ def ModifyItemStatus(id, status):
 
       connection.query(query)
 
-
-
 # ----------------------------- Store Creation process ----------------------------------
 
-def createStore():
+def CreateStore():
       idStore = getNextStore()
       initStore(idStore)
       newEmployees = getNewEmployees()
@@ -785,7 +781,7 @@ def createStore():
 
       updateStoreEmployeeTable(idStore, newEmployees)
       updateWarehouseEmployeeTable(newEmployees)
-
+      fragCustomers(idStore)
 
 def getNewEmployees():
       query = "SELECT P.IdPerson FROM Person P WHERE P.IdPerson NOT IN (SELECT EJ.IdPerson FROM EmployeeJob EJ);"
@@ -840,7 +836,6 @@ def assignEmployees(idStore, newEmployees):
 
       return idAdmin
 
-
 def assignAdmin(idStore,idAdmin, hireDate):
 
       connection = mysql.connector.connect(host='localhost',
@@ -856,7 +851,6 @@ def assignAdmin(idStore,idAdmin, hireDate):
       connection.commit()
 
       connection.close()
-
       
 def getNextStore():
 
@@ -883,7 +877,6 @@ def updateWarehouseEmployees(idStore):
             query += str( (employee[0], employee[1], idStore, employee[2].strftime("%Y-%m-%d")) ) + ";"
 
             connection.query(query)
-
 
 def getStoreEmployees(idStore):
 
@@ -919,7 +912,6 @@ def updateStoreEmployeeTable(idStore, idList):
 
       connection.commit()
 
-
 def updateWarehouseEmployeeTable(idList):
       connectionpsql = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
 
@@ -944,7 +936,9 @@ def getIdStoreList():
 
       return idList
 
-def insertItem(idBrand, description, idCategory, price, stores):
+# -------------------------------------------------------------------------------------------
+
+def InsertItem(idBrand, description, idCategory, price, stores):
       idItem = code = getNextItem()
 
       today = date.today()
@@ -1182,8 +1176,7 @@ def UpdateStoreAdmin(idstore,idperson):
       data3 = connection.query(query3)
 
       connection.close()
-#_____________________________mysql_____________________________
-
+# ---------------------------------- MySQL -------------------------------------------------------------
 
 def InsertEmployeeMSQL(idperson,idStore):
 
