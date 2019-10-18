@@ -31,7 +31,7 @@ def getLastReceipt(idStore):
 
     return id
 
-def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
+def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
     totalPrice = 0
     ind = 0
 
@@ -82,8 +82,8 @@ def purchase(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
     
 
     
-    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
+    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
 
     updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
 
@@ -161,7 +161,9 @@ def getItemsWithCeroStock(idStore):
 
     cursor = connection.cursor()
 
-    cursor.execute("SELECT IdItem FROM ItemStore WHERE Quantity < 5;")
+    cursor.execute("""SELECT ItemStore.IdItem FROM ItemStore 
+    INNER JOIN Item ON Item.IdItem = ItemStore.IdItem 
+    WHERE Item.Status = 1 AND ItemStore.Quantity < 5;""")
 
     records = cursor.fetchall()
 
@@ -192,7 +194,7 @@ def updateCustomerPoints(IdCustomer, points, idStore):
     connection = pg.DB(host='localhost',
                        user='root',
                        passwd='root',
-                       dbname='testpsql')
+                       dbname='datawarehouse')
 
     connection.query(query)
 
@@ -215,7 +217,7 @@ def modifyCustomerPoints(IdCustomer, points, idStore):
     connection = pg.DB(host='localhost',
                        user='root',
                        passwd='root',
-                       dbname='testpsql')
+                       dbname='datawarehouse')
 
     connection.query(query)
 
@@ -229,7 +231,7 @@ def sendPromos(idStore):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     for line in data:
         query = "INSERT INTO Promo VALUES "
@@ -310,12 +312,12 @@ def sendReceipts(idStore):
     connection = pg.DB(host='localhost',
                        user='root',
                        passwd='root',
-                       dbname='testpsql')
+                       dbname='datawarehouse')
 
     for receipt in receipts:
         
         query = (receipt[0], receipt[1],
-                receipt [2], idStore, receipt[3], receipt[4].strftime("%Y-%m-%d"))
+                receipt [2], idStore, receipt[3], receipt[5],receipt[4].strftime("%Y-%m-%d"))
         
 
         connection.query('INSERT INTO Receipt VALUES ' + str(query) + ";" )
@@ -353,7 +355,7 @@ def sendItemReceipt(idStore):
     connection = pg.DB(host='localhost',
                        user='root',
                        passwd='root',
-                       dbname='testpsql')
+                       dbname='datawarehouse')
 
     for line in data:
         
@@ -389,7 +391,7 @@ def updateStock(idStore):
     connection = pg.DB(host='localhost',
                        user='root',
                        passwd='root',
-                       dbname='testpsql')
+                       dbname='datawarehouse')
 
     for item in stock:
         
@@ -437,7 +439,7 @@ def getCustomerPoints(IdCustomer, idStore):
 
     return points
 
-def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
+def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPayment):
     totalPrice = 0
     ind = 0
 
@@ -503,9 +505,9 @@ def buyWithPoints(itemIds, QuantItem, IdSeller, IdCustomer, idStore):
         totalPrice = 0
         modifyCustomerPoints(IdCustomer, points, idStore)
 
-    
-    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
+
+    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
 
     cursor.execute(query, queryData)
 
@@ -537,7 +539,7 @@ def isAdmin(idEmployee):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     data = connection.query(query)
 
@@ -565,7 +567,7 @@ def getAdminStore(idAdmin):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     data = connection.query(query)
 
@@ -585,7 +587,7 @@ def getNonAdminsForStore(idStore, prevAdmin):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     data = connection.query(query)
 
@@ -612,7 +614,7 @@ def deactivateEmployee(idEmployee):
         connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
         connection.query(query)
 
@@ -629,7 +631,7 @@ def deactivateAdmin(idEmployee):
         connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
         
 
@@ -658,7 +660,7 @@ def deactivateStore(idStore):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     connection.query(query)
 
@@ -674,7 +676,7 @@ def deactivateStoreEmployees(idStore):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     connection.query(query)
 
@@ -743,7 +745,7 @@ def generateStoreRequest(idStore):
     connection = pg.DB(host='localhost',
                         user='root',
                         passwd='root',
-                        dbname='testpsql')
+                        dbname='datawarehouse')
 
     connection.query(query)
 
@@ -787,7 +789,7 @@ def openStore(idStore):
     fragItemStore(idStore)
     fragEmployeeStore(idStore)
 
-def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo):
+def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo, idPayment):
     totalPrice = 0
     ind = 0
 
@@ -847,8 +849,9 @@ def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo):
     
     totalPrice = int(totalPrice)
     
-    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate) VALUES (%s,%s,%s,%s);"
-    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate)
+
+    query = "INSERT INTO Receipt (IdEmployee, IdCustomer, Price, SellingDate, idPayment) VALUES (%s,%s,%s,%s, %s);"
+    queryData = (IdSeller, IdCustomer, totalPrice, sellingDate, idPayment)
 
     updateCustomerPoints(IdCustomer, int(totalPrice*0.10), idStore)
 
@@ -873,7 +876,6 @@ def buyWithPromo(itemIds, QuantItem, IdSeller, IdCustomer, idStore, idPromo):
 
 
     return query
-
 
 def getPromoItemAndDiscount(idPromo, idStore):
 
@@ -901,3 +903,68 @@ def getPromoItemAndDiscount(idPromo, idStore):
     except:
         
         return -1
+
+
+
+def GenerateShoppingReport(idStore):
+
+    connection = mysql.connector.connect(host='localhost',
+                                        database=db + str(idStore),
+                                        user='root',
+                                        password='root')
+
+    cursor = connection.cursor()
+
+    query = "CALL ReporteCompras();"
+    
+    try:
+    
+        cursor.execute(query)
+    
+        data = cursor.fetchall()
+    
+        myFile = open('ReporteDeCompras'+str(idStore)+'.csv', 'w+')
+    
+        with myFile:
+    
+            writer = csv.writer(myFile)
+        
+            writer.writerows(data)
+        
+        print("Writing complete")      
+    
+        connection.close()
+    except:
+        print("No se logro escribir el archivo...")
+    return
+
+def GeneratePointsReport(idStore):
+    connection = mysql.connector.connect(host='localhost',
+                                        database=db + str(idStore),
+                                        user='root',
+                                        password='root')
+    cursor = connection.cursor()
+    query = "CALL ReportePuntos();"
+    try:
+        cursor.execute(query)
+        data = cursor.fetchall()
+        myFile = open('ReporteDePuntos'+str(idStore)+'.csv', 'w+')
+        with myFile:
+            writer = csv.writer(myFile)
+            writer.writerows(data)
+        print("Writing complete")      
+        connection.close()
+    except:
+        print("No se logro escribir el archivo...")
+    return
+
+def ConsultSales(idemployee):
+    connection = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
+
+    query = "SELECT ConsultSales( " + str(idemployee) + ");" 
+
+    data = connection.query(query)
+
+    print(data)
+
+    connection.close()

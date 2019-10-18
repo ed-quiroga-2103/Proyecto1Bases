@@ -88,28 +88,39 @@ CREATE TABLE IF NOT EXISTS ItemStore (
 
 );
 
-    CREATE TABLE IF NOT EXISTS Receipt (
 
-        IdReceipt INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
-        IdEmployee INTEGER NOT NULL,
-        IdCustomer INTEGER,
-        Price INTEGER NOT NULL,
-        SellingDate DATE NOT NULL,
+CREATE TABLE Payment(
 
-        FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
-        FOREIGN KEY (IdCustomer) REFERENCES Person (IdPerson)
+    IdPayment INTEGER PRIMARY KEY NOT NULL,
+    Name VARCHAR(20) NOT NULL
 
-    );
+);
 
-    CREATE TABLE IF NOT EXISTS ItemReceipt (
 
-        IdItem INTEGER NOT NULL,
-        IdReceipt INTEGER NOT NULL,
-        Quantity INTEGER NOT NULL,
 
-        FOREIGN KEY (IdItem) REFERENCES Item (IdItem),
-        FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt)
-    );
+CREATE TABLE IF NOT EXISTS Receipt (
+
+    IdReceipt INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
+    IdEmployee INTEGER NOT NULL,
+    IdCustomer INTEGER,
+    Price INTEGER NOT NULL,
+    SellingDate DATE NOT NULL,
+    IdPayment INTEGER NOT NULL,
+
+    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
+    FOREIGN KEY (IdCustomer) REFERENCES Person (IdPerson)
+
+);
+
+CREATE TABLE IF NOT EXISTS ItemReceipt (
+
+    IdItem INTEGER NOT NULL,
+    IdReceipt INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+
+    FOREIGN KEY (IdItem) REFERENCES Item (IdItem),
+    FOREIGN KEY (IdReceipt) REFERENCES Receipt (IdReceipt)
+);
 
 
 
@@ -270,11 +281,44 @@ CREATE PROCEDURE PromocionId (Id INTEGER)
 	END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE ReporteCompras ()
+BEGIN
+	SELECT IR.IdReceipt, I.IdItem, B.Name, I.Price, IR.Quantity
+	FROM Item I
+		INNER JOIN  Brand B ON B.IdBrand = I.IdBrand
+		INNER JOIN  ItemReceipt IR ON IR.IdItem = I.IdItem
+	ORDER BY IR.Receipt DESC
+END //
+DELIMITER //
 
-	-- SELECT DATE(now()) INTO OUTFILE '/home/racso/Proyecto1Bases/MySQL/date.csv' 
-	-- FIELDS ENCLOSED BY '"' 
-	-- TERMINATED BY ';' 
-	-- ESCAPED BY '"' 
-	-- LINES TERMINATED BY '\r\n';
 
+DELIMITER // 
+CREATE PROCEDURE ReportePuntos()
+	BEGIN
+		SELECT P.IdPerson, P.FirstName, P.MiddleName, P.LastName, P.IdentityDoc, C.Points 
+		FROM Person P
+		INNER JOIN Customer C ON C.IdPerson = P.IdPerson
+		ORDER BY C.Points DESC;
+	END //
+DELIMITER //
+
+DELIMITER // 
+CREATE PROCEDURE ConsultSalesMysql(id INTEGER)
+	BEGIN
+		SELECT 
+             Receipt.IdReceipt,
+             ItemReceipt.IdItem,
+             Receipt.SellingDate,
+             ItemReceipt.Quantity
+         FROM
+             Receipt 
+            
+         INNER JOIN ItemReceipt ON ItemReceipt.IdReceipt = Receipt.IdReceipt
+
+         WHERE Receipt.IdEmployee = id
+
+         ORDER BY Receipt.IdEmployee DESC;
+	END //
+DELIMITER //
 

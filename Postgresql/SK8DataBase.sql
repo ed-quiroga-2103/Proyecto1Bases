@@ -105,16 +105,27 @@ CREATE TABLE Shipment (
     FOREIGN KEY (IdStore) REFERENCES Store (IdStore)
 );
 
+
+CREATE TABLE Payment(
+
+    IdPayment SERIAL PRIMARY KEY NOT NULL,
+    Type VARCHAR NOT NULL
+
+);
+
+
 CREATE TABLE Receipt (
     IdReceipt SERIAL PRIMARY KEY,
     IdEmployee INTEGER NOT NULL, 
     IdPerson INTEGER,
     IdStore INTEGER NOT NULL,
     Price INTEGER NOT NULL,
+    IdPayment INTEGER NOT NULL,
     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     FOREIGN KEY (IdPerson) REFERENCES Person (IdPerson),
     FOREIGN KEY (IdStore) REFERENCES Store (IdStore),
-    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson)
+    FOREIGN KEY (IdEmployee) REFERENCES Person (IdPerson),
+    FOREIGN KEY (IdPayment) REFERENCES Payment (IdPayment)
 );
 
 CREATE TABLE StoreRequest (
@@ -513,6 +524,32 @@ BEGIN
         INNER JOIN Promo ON Promo.IdStore = S.IdStore
 
         WHERE S.IdStore = id;
+END; 
+$Body$ 
+LANGUAGE PLPGSQL;
+
+
+CREATE OR REPLACE FUNCTION ConsultSales(id INTEGER) 
+   RETURNS TABLE (
+     IdReceipt INTEGER,
+     IdItem INTEGER,
+     SellingDate Date,
+     Quantiy INTEGER
+    ) 
+AS $Body$
+BEGIN
+   RETURN QUERY 
+        SELECT 
+            Receipt.IdReceipt,
+            ItemReceipt.IdItem,
+            Receipt.SellingDate,
+            ItemReceipt.Quantity
+        FROM
+            Receipt 
+            
+        INNER JOIN ItemReceipt ON ItemReceipt.IdReceipt = Receipt.IdReceipt
+
+        WHERE Receipt.IdReceipt = id;
 END; 
 $Body$ 
 LANGUAGE PLPGSQL;
