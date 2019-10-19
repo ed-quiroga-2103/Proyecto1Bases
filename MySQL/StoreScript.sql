@@ -193,39 +193,6 @@ CREATE TABLE IF NOT EXISTS Promo (
 );  
 
 
--- Reporte sobre puntos de clientes_____________________________________________________
-DELIMITER // 
-CREATE PROCEDURE ReportePuntos()
-	BEGIN
-		SELECT P.IdPerson, P.Name, P.MiddleName, P.LastName, P.IdentityDoc, C.Points 
-		FROM Person P
-		INNER JOIN Customer C ON C.IdPerson = P.IdPerson
-		ORDER BY C.Points DESC
-		INTO OUTFILE 'C:/tmp/cancelled_orders.csv' 
-		FIELDS ENCLOSED BY '"' 
-		TERMINATED BY ';' 
-		ESCAPED BY '"' 
-		LINES TERMINATED BY '\r\n';
-	END //
-DELIMITER //
-
-
--- Reporte de las compras realizadas____________________________________________________
-DELIMITER //
-CREATE PROCEDURE ReporteCompras ()
-BEGIN
-	SELECT IR.IdReceipt, I.IdItem, B.Name, I.Price, IR.Quantity
-	FROM Item I
-		INNER JOIN  Brand B ON B.IdBrand = I.IdBrand
-		INNER JOIN  ItemReceipt IR ON IR.IdItem = I.IdItem
-	ORDER BY IR.Receipt DESC
-	INTO OUTFILE 'C:/tmp/cancelled_orders.csv' 
-	FIELDS ENCLOSED BY '"' 
-	TERMINATED BY ';' 
-	ESCAPED BY '"' 
-	LINES TERMINATED BY '\r\n';
-END //
-DELIMITER //
 
 -- Consulta sobre garantía de un producto_______________________________________________
 DELIMITER //
@@ -257,15 +224,15 @@ DELIMITER ;
 
 -- Segunda opcion________________________________________________________________________
 
- DELIMITER //
+DELIMITER //
 CREATE FUNCTION PromocionFechaHora(FinalDate DATE)
 RETURNS BOOL
 BEGIN
-	IF DATEDIFF(FinalDateTime,DATE(NOW()))>= 0 THEN
+	IF DATEDIFF(FinalDate,DATE(NOW()))>= 0 THEN
 		RETURN TRUE;
 	  END IF;
 	  
-	IF DATEDIFF(FinalDateTime,DATE(NOW()))< 0 THEN
+	IF DATEDIFF(FinalDate,DATE(NOW()))< 0 THEN
 		RETURN TRUE;
 	  END IF;
 END //

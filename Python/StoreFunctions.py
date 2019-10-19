@@ -138,7 +138,7 @@ def updateItemStock(itemId, quantity, idStore):
 
     cursor = connection.cursor()
 
-    query = "UPDATE ItemStore SET Quantity = " + str(quantity) + " WHERE IdItem = " + str(itemId) + ";"
+    query = "Store SET Quantity = " + str(quantity) + " WHERE IdItem = " + str(itemId) + ";"
 
     try:
 
@@ -225,7 +225,6 @@ def modifyCustomerPoints(IdCustomer, points, idStore):
 
 def sendPromos(idStore):
     
-    #LA FRAGMENTACION TAMBIEN TIENE QUE HACERSE CON LAS PROMOCIONES
     data = getPromos(idStore)
 
     connection = pg.DB(host='localhost',
@@ -238,7 +237,6 @@ def sendPromos(idStore):
         query += str( (line[0], idStore, line[1], line[2].strftime("%Y-%m-%d %H:%M:%S"), line[3].strftime("%Y-%m-%d %H:%M:%S"), line[4]) )
         query += ";"
         connection.query(query)
-
 
     connection.close()
 
@@ -962,3 +960,46 @@ def consultSales(idemployee):
     print(data)
 
     connection.close()
+
+def getReceiptDate(idReceipt, idStore):
+    connection = mysql.connector.connect(host='localhost',
+                                        database=db + str(idStore),
+                                        user='root',
+                                        password='root')
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT SellingDate FROM Receipt WHERE IdReceipt = " + str(idReceipt)+ ";")
+
+    data = cursor.fetchall()
+
+    try:
+        return data[0][0].strftime("%Y-%m-%d")
+
+    except:
+        return -1
+
+def consultGuarantee(idReceipt, idStore):
+    
+    connection = mysql.connector.connect(host='localhost',
+                                        database=db + str(idStore),
+                                        user='root',
+                                        password='root')
+    cursor = connection.cursor()
+
+    date = getReceiptDate(idReceipt, idStore)
+    print(date)
+    if date == -1:
+        return "El recibo no se encuentra en la base de datos"
+
+
+    cursor.execute("SELECT GarantiaProducto('" + date +  "');")
+
+    isAvailable = cursor.fetchall()
+
+
+    if isAvailable[0][0]:
+        print("La compra se encuentra en garantia")
+    else:
+        print("La compra no se encuentra en garantia")
+    
+
