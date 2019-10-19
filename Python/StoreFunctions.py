@@ -908,15 +908,16 @@ def generateSalesReport(idStore):
     cursor = connection.cursor()
 
     query = "CALL SalesReport();"
+    cursor.execute(query)
+    
+    data = cursor.fetchall()
+    print(data)
+
     
     try:
     
-        cursor.execute(query)
-    
-        data = cursor.fetchall()
-    
+       
         myFile = open('ReporteDeCompras'+str(idStore)+'.csv', 'w+')
-    
         with myFile:
     
             writer = csv.writer(myFile)
@@ -937,9 +938,10 @@ def generatePointsReport(idStore):
                                         password='root')
     cursor = connection.cursor()
     query = "CALL PointsReport();"
+    cursor.execute(query)
+    data = cursor.fetchall()
     try:
-        cursor.execute(query)
-        data = cursor.fetchall()
+        
         myFile = open('ReporteDePuntos'+str(idStore)+'.csv', 'w+')
         with myFile:
             writer = csv.writer(myFile)

@@ -1089,25 +1089,6 @@ def activateItem(idItem):
 
 # --------------------------------- New Functions ---------------------------------------------------
 
-def ConsultGuarantee(idreceipt):
-      connection = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
-
-      query = "SELECT SellingDate FROM Receipt WHERE IdReceipt = "+str(idreceipt)+" ;"
-
-      data = connection.query(query)
-
-      connection.close()
-
-      test = data[0][0]
-
-      today = date.today()
-      requestDate = today
-
-      if abs(requestDate.days - test).days > 30:
-            return "La garantia se vencio..."
-      else:
-            return "La garantia sigue vigente..."
-
 def InsertEmployee(idperson, idjob, idstore):
       connection = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
 

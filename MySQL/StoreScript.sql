@@ -255,7 +255,7 @@ BEGIN
 	FROM Item I
 		INNER JOIN  Brand B ON B.IdBrand = I.IdBrand
 		INNER JOIN  ItemReceipt IR ON IR.IdItem = I.IdItem
-	ORDER BY IR.Receipt DESC
+	ORDER BY IR.Receipt DESC;
 END //
 DELIMITER //
 
