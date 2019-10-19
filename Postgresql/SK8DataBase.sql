@@ -533,7 +533,7 @@ CREATE OR REPLACE FUNCTION ConsultSales(id INTEGER)
    RETURNS TABLE (
      IdReceipt INTEGER,
      IdItem INTEGER,
-     SellingDate timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+     SellingDate timestamp without time zone,
      Quantiy INTEGER
     ) 
 AS $Body$
@@ -549,7 +549,7 @@ BEGIN
             
         INNER JOIN ItemReceipt ON ItemReceipt.IdReceipt = Receipt.IdReceipt
 
-        WHERE Receipt.IdReceipt = id;
+        WHERE Receipt.IdEmployee = id;
 END; 
 $Body$ 
 LANGUAGE PLPGSQL;

@@ -6,7 +6,7 @@ import csv
 from datetime import date
 from WarehouseFunctions import *
 
-db = "Test"
+db = "Store"
 
 def getLastReceipt(idStore):
 
@@ -147,8 +147,7 @@ def updateItemStock(itemId, quantity, idStore):
 
     except:
 
-        print(query)
-
+        pass
 
     return
 
@@ -401,8 +400,6 @@ def updateStock(idStore):
         query += " WHERE IdItem = "
         query += str(item[0])
         query += " AND IdStore = " + str(idStore) + ";"
-
-        print(query)
 
         connection.query(query)
 

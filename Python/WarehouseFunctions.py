@@ -5,7 +5,7 @@ import StoreFunctions
 import random
 from datetime import date
 
-db = "Test"
+db = "Store"
 
 def getItemStore(IdStore):
       connection = pg.DB(dbname='datawarehouse', host='127.0.0.1', port = 5432, user='root', passwd='root')
@@ -441,11 +441,11 @@ def initStore(idStore):
 
       cursor = connection.cursor()
 
-      cursor.execute("CREATE DATABASE Test"+str(idStore)+";")
+      cursor.execute("CREATE DATABASE Store"+str(idStore)+";")
 
       file = open("MySQL/StoreScript.sql")
 
-      query = "USE Test"+str(idStore) + ";\n" + "\n".join(file.readlines())
+      query = "USE Store"+str(idStore) + ";\n" + "\n".join(file.readlines())
 
       file.close()
 
@@ -486,6 +486,8 @@ def generateWarehouseRequest():
 
       data = getItemsWarehouse()
 
+      if data == []:
+            return
 
       idRequest = connection.query("SELECT IdRequest FROM WarehouseRequest ORDER BY IdRequest DESC;")
 
@@ -1026,9 +1028,6 @@ def getNextItem():
             return data[0][0] + 1
       except:
             return 1
-
-
-
 
 def deactivateItem(idItem):
 
